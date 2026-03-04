@@ -1,0 +1,381 @@
+import React, { useState } from "react"; import { motion } from "framer-motion"; import { Card, CardContent } from "@/components/ui/card"; import { Button } from "@/components/ui/button"; import { Input } from "@/components/ui/input"; import { Textarea } from "@/components/ui/textarea";
+
+‎
+
+‎/* ================= VYRO FULL PRODUCTION LOGIC ADDED =================
+
+‎
+
+‎BACKEND REQUIRED (Node.js + Express + MongoDB Recommended)
+
+‎
+
+‎MAIN SYSTEM FLOW:
+
+‎
+
+‎1. Customer submits Repair Form.
+
+‎
+
+‎
+
+‎2. Data saved in Database (status = "Pending Inspection").
+
+‎
+
+‎
+
+‎3. Admin logs in Dashboard.
+
+‎
+
+‎
+
+‎4. After repair complete → Admin uploads Repair Video.
+
+‎
+
+‎
+
+‎5. Status changes to "Repaired - Awaiting Customer Approval".
+
+‎
+
+‎
+
+‎6. Customer receives SMS/WhatsApp with Video Link.
+
+‎
+
+‎
+
+‎7. Customer clicks "Approve & Pay" button.
+
+‎
+
+‎
+
+‎8. Secure Payment Gateway (Razorpay) opens.
+
+‎
+
+‎
+
+‎9. After successful payment → status = "Paid & Ready to Dispatch".
+
+‎
+
+‎
+
+‎10. Tracking ID generated.
+
+‎
+
+‎
+
+‎
+
+‎SECURITY:
+
+‎
+
+‎SSL Certificate Required (HTTPS)
+
+‎
+
+‎Razorpay Secure Payment Gateway
+
+‎
+
+‎JWT Admin Authentication
+
+‎
+
+‎Encrypted Database Storage
+
+‎
+
+‎
+
+‎DATABASE COLLECTIONS:
+
+‎
+
+‎Users
+
+‎
+
+‎RepairRequests
+
+‎
+
+‎Orders
+
+‎
+
+‎Payments
+
+‎
+
+‎AdminLogs
+
+‎
+
+‎
+
+‎===================================================================== */
+
+‎
+
+‎export default function VyroWebsite() { const [language, setLanguage] = useState("hi");
+
+‎
+
+‎return ( <div className="bg-black text-white min-h-screen relative"> {/* Floating WhatsApp */} <a
+
+‎href="https://wa.me/919610651006"
+
+‎target="_blank"
+
+‎className="fixed bottom-6 right-6 bg-green-500 text-white px-4 py-3 rounded-full shadow-2xl z-50"
+
+‎> WhatsApp </a>
+
+‎
+
+‎{/* Navbar */}
+
+‎  <div className="flex justify-between items-center p-4 border-b border-yellow-500">
+
+‎    <h1 className="text-2xl font-bold text-yellow-400">VYRO</h1>
+
+‎    <div className="flex gap-3">
+
+‎      <Button onClick={() => setLanguage(language === "hi" ? "en" : "hi")}>
+
+‎        {language === "hi" ? "English" : "हिंदी"}
+
+‎      </Button>
+
+‎      <Button className="bg-yellow-500 text-black">Admin Login</Button>
+
+‎    </div>
+
+‎  </div>
+
+‎
+
+‎  {/* Hero Section */}
+
+‎  <section className="text-center py-20 px-4 relative">
+
+‎    <div className="absolute inset-0 opacity-5 text-9xl font-bold text-yellow-500 flex items-center justify-center pointer-events-none">
+
+‎      VYRO
+
+‎    </div>
+
+‎    <motion.h2
+
+‎      initial={{ opacity: 0, y: -40 }}
+
+‎      animate={{ opacity: 1, y: 0 }}
+
+‎      transition={{ duration: 1 }}
+
+‎      className="text-4xl md:text-6xl font-extrabold text-yellow-400"
+
+‎    >
+
+‎      FEEL THE POWER
+
+‎    </motion.h2>
+
+‎    <p className="mt-6 text-lg max-w-2xl mx-auto">
+
+‎      पहले विश्वास करो, फिर इस्तेमाल करो। आपका स्पीकर पक्का ठीक होगा।
+
+‎      नई कंपनी है लेकिन काम दमदार है। एक बार मौका जरूर दीजिए।
+
+‎    </p>
+
+‎    <div className="mt-8 flex flex-col md:flex-row gap-4 justify-center">
+
+‎      <Button className="bg-yellow-500 text-black font-bold">Buy Speaker (₹)</Button>
+
+‎      <Button variant="outline" className="border-yellow-500 text-yellow-400">Repair Now</Button>
+
+‎    </div>
+
+‎    <p className="mt-4 text-sm">All India Delivery | Cash on Delivery | Secure Online Payment</p>
+
+‎  </section>
+
+‎
+
+‎  {/* How It Works Guide */}
+
+‎  <section className="py-16 px-6 bg-zinc-900">
+
+‎    <h3 className="text-3xl font-bold text-center text-yellow-400 mb-10">How Repair Process Works</h3>
+
+‎    <div className="grid md:grid-cols-4 gap-6 text-center">
+
+‎      <Card className="bg-black border border-yellow-500"><CardContent className="p-6">1️⃣ Repair Option पर क्लिक करें</CardContent></Card>
+
+‎      <Card className="bg-black border border-yellow-500"><CardContent className="p-6">2️⃣ Speaker की फोटो और प्रॉब्लम भेजें</CardContent></Card>
+
+‎      <Card className="bg-black border border-yellow-500"><CardContent className="p-6">3️⃣ Repair के बाद Video Proof मिलेगा</CardContent></Card>
+
+‎      <Card className="bg-black border border-yellow-500"><CardContent className="p-6">4️⃣ संतुष्ट होने के बाद Secure Payment करें</CardContent></Card>
+
+‎    </div>
+
+‎  </section>
+
+‎
+
+‎  {/* Products Section */}
+
+‎  <section className="py-16 px-6">
+
+‎    <h3 className="text-3xl font-bold text-center text-yellow-400 mb-10">Our Speaker Collection</h3>
+
+‎    <div className="grid md:grid-cols-3 gap-8">
+
+‎      {["Bluetooth Speaker","Home Theatre","DJ Speaker","Woofer","Tower Speaker"].map((type, index) => (
+
+‎        <Card key={index} className="bg-zinc-900 border border-yellow-500 rounded-2xl shadow-xl">
+
+‎          <CardContent className="p-6">
+
+‎            <div className="h-40 bg-zinc-800 rounded-xl mb-4"></div>
+
+‎            <h4 className="text-xl font-bold">{type}</h4>
+
+‎            <p className="text-sm mt-2">Best Sound Quality | Warranty | ₹ Currency</p>
+
+‎            <Button className="mt-4 bg-yellow-500 text-black w-full">View All</Button>
+
+‎          </CardContent>
+
+‎        </Card>
+
+‎      ))}
+
+‎    </div>
+
+‎  </section>
+
+‎
+
+‎  {/* Repair Section */}
+
+‎  <section className="py-20 px-6 bg-zinc-900">
+
+‎    <h3 className="text-3xl font-bold text-center text-yellow-400 mb-6">All Brand Speaker Repair</h3>
+
+‎    <p className="text-center max-w-3xl mx-auto mb-10">
+
+‎      सभी कंपनी और सभी प्रकार के स्पीकर एवं होम थिएटर ठीक किए जाते हैं।
+
+‎      कम से कम कीमत में बेहतरीन क्वालिटी।
+
+‎    </p>
+
+‎    <div className="max-w-xl mx-auto space-y-4">
+
+‎      <Input placeholder="Your Name" />
+
+‎      <Input placeholder="Phone Number" />
+
+‎      <Textarea placeholder="Describe Speaker Problem" />
+
+‎      <Input type="file" multiple />
+
+‎      <Button className="bg-yellow-500 text-black w-full">Submit Repair Request</Button>
+
+‎    </div>
+
+‎    <p className="text-center text-sm mt-6">
+
+‎      Repair Complete होने के बाद आपको Video Proof भेजी जाएगी। 
+
+‎      Payment केवल Repair संतुष्टि के बाद लिया जाएगा।
+
+‎    </p>
+
+‎  </section>
+
+‎
+
+‎  {/* Secure Payment Section */}
+
+‎  <section className="py-16 px-6">
+
+‎    <h3 className="text-3xl font-bold text-center text-yellow-400 mb-8">100% Secure Payment System</h3>
+
+‎    <p className="text-center max-w-3xl mx-auto">
+
+‎      हमारी वेबसाइट SSL Encryption और Secure Payment Gateway से सुरक्षित है।
+
+‎      कोई भी Hacker आपकी Payment Information Access नहीं कर सकता।
+
+‎      Razorpay / UPI / Card / Net Banking Support उपलब्ध रहेगा।
+
+‎    </p>
+
+‎  </section>
+
+‎
+
+‎  {/* Admin Dashboard */}
+
+‎  <section className="py-16 px-6 bg-zinc-900">
+
+‎    <h3 className="text-3xl font-bold text-center text-yellow-400 mb-8">Owner Dashboard (Private)</h3>
+
+‎    <div className="grid md:grid-cols-3 gap-6">
+
+‎      <Card className="bg-black border border-yellow-500"><CardContent className="p-6">Customer Messages Record</CardContent></Card>
+
+‎      <Card className="bg-black border border-yellow-500"><CardContent className="p-6">Incoming Calls Log</CardContent></Card>
+
+‎      <Card className="bg-black border border-yellow-500"><CardContent className="p-6">Repair & Orders Tracking</CardContent></Card>
+
+‎    </div>
+
+‎  </section>
+
+‎
+
+‎  {/* Contact */}
+
+‎  <section className="py-16 px-6 text-center">
+
+‎    <h3 className="text-2xl font-bold text-yellow-400">Contact Us</h3>
+
+‎    <p className="mt-4">Phone: 9610651006</p>
+
+‎    <p>Email: virenkumawat444@gmail.com</p>
+
+‎    <p className="mt-2">Babai, Jhunjhunu, Rajasthan, India</p>
+
+‎  </section>
+
+‎
+
+‎  <footer className="text-center py-6 border-t border-yellow-500">
+
+‎    <p>© 2026 VYRO Company | All Rights Reserved | INR ₹ | All India Delivery</p>
+
+‎  </footer>
+
+‎</div>
+
+‎
+
+‎); }
+
+‎
