@@ -5,261 +5,227 @@
 <title>VYRO Speaker Store</title>
 
 <style>
-body{
-margin:0;
-font-family:Arial, sans-serif;
-background:#f3f3f3;
-scroll-behavior:smooth;
-}
-
-/* NAVBAR */
-.navbar{
-background:#131921;
-color:white;
-display:flex;
-align-items:center;
+body{margin:0;font-family:Arial;background:#f3f3f3;}
+header{
+background:#232f3e;color:white;
+padding:15px;display:flex;
 justify-content:space-between;
-padding:12px 20px;
-position:fixed;
-width:100%;
-top:0;
-z-index:1000;
+align-items:center;position:sticky;
+top:0;z-index:1000;
 }
-
-.logo{
-font-size:20px;
-font-weight:bold;
-}
-
-.menu-icon{
-font-size:25px;
+.logo{color:#ff9900;font-size:22px;font-weight:bold;}
+nav a{color:white;margin:0 10px;text-decoration:none;}
+.cart{
+background:#ff9900;padding:5px 12px;
+border-radius:20px;color:black;font-weight:bold;
 cursor:pointer;
 }
-
-/* SIDE MENU */
-.sidemenu{
-height:100%;
-width:0;
-position:fixed;
-top:0;
-left:0;
-background:#111;
-overflow-x:hidden;
-transition:0.4s;
-padding-top:60px;
-z-index:2000;
+.hero{
+background:#ff9900;color:white;
+text-align:center;padding:50px 20px;
 }
-
-.sidemenu a{
-padding:10px 25px;
-text-decoration:none;
-color:white;
-display:block;
-font-size:18px;
-}
-
-.sidemenu a:hover{
-background:red;
-}
-
-.closebtn{
-position:absolute;
-top:15px;
-right:20px;
-font-size:30px;
-cursor:pointer;
-}
-
-/* SEARCH BAR */
-.search-bar{
-margin-top:70px;
-background:#232f3e;
-padding:15px;
-text-align:center;
-}
-
-.search-bar input{
-padding:8px;
-width:200px;
-border-radius:5px;
-border:none;
-}
-
-.search-bar select{
-padding:8px;
-border-radius:5px;
-border:none;
-}
-
-.search-bar button{
-padding:8px 15px;
-background:#febd69;
-border:none;
-border-radius:5px;
-cursor:pointer;
-}
-
-/* PRODUCTS GRID */
 .products{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:20px;
-padding:30px;
+display:flex;flex-wrap:wrap;
+justify-content:center;padding:20px;
 }
-
 .card{
-background:white;
-padding:15px;
+background:white;width:250px;
+margin:15px;padding:15px;
 border-radius:8px;
-box-shadow:0 2px 8px rgba(0,0,0,0.1);
-text-align:center;
+box-shadow:0 2px 10px rgba(0,0,0,0.1);
+transition:0.3s;
 }
-
-.card img{
-width:100%;
-height:180px;
-object-fit:cover;
-border-radius:5px;
+.card:hover{transform:scale(1.05);}
+.card img{width:100%;border-radius:5px;}
+.price{color:#ff9900;font-weight:bold;font-size:18px;}
+button{
+padding:8px 15px;border:none;
+border-radius:20px;cursor:pointer;margin:5px;
 }
-
-.price{
-color:#b12704;
-font-size:18px;
-font-weight:bold;
-margin:10px 0;
+.add{background:#ffd814;}
+.buy{background:#ff9900;}
+.cart-page{
+display:none;padding:20px;
 }
-
-.card button{
-padding:8px 15px;
-border:none;
-border-radius:20px;
-cursor:pointer;
-margin:5px;
+.cart-item{
+background:white;padding:10px;
+margin:10px auto;max-width:500px;
+border-radius:8px;
 }
-
-.buy-btn{
-background:#ff9900;
-}
-
-.pay-btn{
-background:#28a745;
-color:white;
-}
-
-/* REPAIR SECTION */
-.repair{
-background:white;
-padding:40px;
-text-align:center;
-}
-
-.repair button{
-background:green;
-color:white;
-padding:10px 20px;
-border:none;
-border-radius:20px;
-cursor:pointer;
-}
-
-/* FOOTER */
 footer{
-background:#131921;
-color:white;
-text-align:center;
-padding:20px;
+background:#232f3e;color:white;
+text-align:center;padding:20px;
+margin-top:30px;
+}
+.whatsapp{
+position:fixed;bottom:20px;right:20px;
+background:#25D366;color:white;
+padding:12px;border-radius:50%;
+text-decoration:none;font-size:20px;
 }
 </style>
-
-<script>
-function openMenu(){
-document.getElementById("mySidemenu").style.width="250px";
-}
-function closeMenu(){
-document.getElementById("mySidemenu").style.width="0";
-}
-</script>
-
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-<div class="navbar">
-<span class="menu-icon" onclick="openMenu()">☰</span>
-<div class="logo">VYRO Speaker Store</div>
+<header>
+<div class="logo">VYRO 🇮🇳</div>
+<nav>
+<a href="#" onclick="showHome()">Home</a>
+<span class="cart" onclick="showCart()">
+Cart (<span id="cart-count">0</span>)
+</span>
+</nav>
+</header>
+
+<div id="home-section">
+
+<div class="hero">
+<h1>Premium Bluetooth Speakers – Made In India 🇮🇳</h1>
+<p>Powerful Sound | 6 Months Service Warranty</p>
 </div>
 
-<!-- SIDE MENU -->
-<div id="mySidemenu" class="sidemenu">
-<span class="closebtn" onclick="closeMenu()">×</span>
-<a href="#">Home</a>
-<a href="#">Products</a>
-<a href="#">Repair</a>
-<a href="#">Contact</a>
-</div>
-
-<!-- SEARCH BAR -->
-<div class="search-bar">
-<input type="text" placeholder="Search Speakers...">
-<select>
-<option>All Category</option>
-<option>Portable Speaker</option>
-<option>Home Theatre</option>
-<option>DJ Speaker</option>
-<option>Bluetooth Speaker</option>
-<option>AC/DC Component</option>
-</select>
-<button>Search</button>
-</div>
-
-<!-- PRODUCTS -->
 <div class="products">
 
 <div class="card">
-<img src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad">
-<h3>Portable Bluetooth Speaker</h3>
-<div class="price">₹1,499</div>
-<button class="buy-btn">Add to Cart</button>
-<a href="upi://pay?pa=9610651006-2@ybl&pn=VYRO%20Store&cu=INR">
-<button class="pay-btn">Buy Now</button>
-</a>
+<img src="https://images.unsplash.com/photo-1585386959984-a4155228e89d">
+<h3>Portable Bass Speaker</h3>
+<p class="price">₹1,999</p>
+<p>⭐⭐⭐⭐☆</p>
+<button class="add"
+onclick="addToCart('Portable Bass Speaker',1999)">
+Add To Cart</button>
 </div>
 
 <div class="card">
-<img src="https://images.unsplash.com/photo-1593784991095-a205069470b6">
-<h3>Home Theatre System</h3>
-<div class="price">₹4,999</div>
-<button class="buy-btn">Add to Cart</button>
-<a href="upi://pay?pa=9610651006-2@ybl&pn=VYRO%20Store&cu=INR">
-<button class="pay-btn">Buy Now</button>
-</a>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1518444028785-8a8b7f3c4a1b">
-<h3>DJ Bass Speaker</h3>
-<div class="price">₹7,999</div>
-<button class="buy-btn">Add to Cart</button>
-<a href="upi://pay?pa=9610651006-2@ybl&pn=VYRO%20Store&cu=INR">
-<button class="pay-btn">Buy Now</button>
-</a>
+<img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1">
+<h3>Home Theater Speaker</h3>
+<p class="price">₹4,999</p>
+<p>⭐⭐⭐⭐⭐</p>
+<button class="add"
+onclick="addToCart('Home Theater Speaker',4999)">
+Add To Cart</button>
 </div>
 
 </div>
-
-<!-- REPAIR SECTION -->
-<div class="repair">
-<h2>🔧 Speaker Repair Service</h2>
-<p>No Sound | Low Bass | Power Issue Fix</p>
-<a href="https://wa.me/919610651006">
-<button>Repair My Speaker</button>
-</a>
 </div>
+
+<div id="cart-section" class="cart-page">
+<h2>🛒 Your Cart</h2>
+<div id="cart-items"></div>
+
+<center>
+<input type="text" id="couponCode" placeholder="Enter Coupon">
+<button onclick="applyCoupon()">Apply</button>
+</center>
+
+<h3 style="text-align:center;">
+Total: ₹<span id="total-price">0</span>
+</h3>
+
+<center>
+<button class="buy" onclick="checkout()">
+Order on WhatsApp
+</button>
+<br><br>
+<button onclick="showHome()">Back To Home</button>
+</center>
+</div>
+
+<a href="https://wa.me/919610651006"
+class="whatsapp" target="_blank">💬</a>
 
 <footer>
-© 2026 VYRO Speaker Store | All Rights Reserved 🇮🇳
+<p>© 2026 VYRO Speaker Store</p>
+<p>Made In India 🇮🇳 | 6 Months Service Warranty</p>
 </footer>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("vyroCart")) || [];
+let discount = 0;
+
+function updateCartCount(){
+document.getElementById("cart-count").innerText = cart.length;
+}
+
+function addToCart(name, price){
+let existing = cart.find(item => item.name === name);
+if(existing){ existing.qty += 1; }
+else{ cart.push({name:name, price:price, qty:1}); }
+localStorage.setItem("vyroCart", JSON.stringify(cart));
+updateCartCount();
+alert("Added to Cart!");
+}
+
+function showCart(){
+document.getElementById("home-section").style.display="none";
+document.getElementById("cart-section").style.display="block";
+renderCart();
+}
+
+function showHome(){
+document.getElementById("home-section").style.display="block";
+document.getElementById("cart-section").style.display="none";
+}
+
+function renderCart(){
+let total=0;
+let html="";
+cart.forEach((item,index)=>{
+total += item.price * item.qty;
+html+=`
+<div class="cart-item">
+<h3>${item.name}</h3>
+<p>₹${item.price}</p>
+<button onclick="changeQty(${index},-1)">−</button>
+Qty: ${item.qty}
+<button onclick="changeQty(${index},1)">+</button>
+<button onclick="removeItem(${index})">
+Remove</button>
+</div>
+`;
+});
+total -= discount;
+document.getElementById("cart-items").innerHTML=html;
+document.getElementById("total-price").innerText=total;
+}
+
+function changeQty(index,change){
+cart[index].qty += change;
+if(cart[index].qty<=0){cart.splice(index,1);}
+localStorage.setItem("vyroCart", JSON.stringify(cart));
+renderCart();
+updateCartCount();
+}
+
+function removeItem(index){
+cart.splice(index,1);
+localStorage.setItem("vyroCart", JSON.stringify(cart));
+renderCart();
+updateCartCount();
+}
+
+function applyCoupon(){
+let code=document.getElementById("couponCode").value;
+if(code==="VYRO10"){
+discount=500;
+alert("₹500 Discount Applied!");
+}else{
+alert("Invalid Coupon");
+}
+renderCart();
+}
+
+function checkout(){
+let message="Hello VYRO, I want to order:%0A";
+cart.forEach(item=>{
+message+=item.name+" x "+item.qty+"%0A";
+});
+window.open("https://wa.me/919610651006?text="+message,"_blank");
+}
+
+updateCartCount();
+</script>
 
 </body>
   </html>
