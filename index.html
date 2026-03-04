@@ -2,140 +2,260 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VYRO Speaker Store & Repair</title>
+<title>VYRO Speaker Store</title>
 
 <style>
-body {
+body{
 margin:0;
-padding:0;
-font-family: Arial, sans-serif;
-background:#f2f2f2;
+font-family:Arial, sans-serif;
+background:#f3f3f3;
+scroll-behavior:smooth;
 }
 
-header {
-background:black;
+/* NAVBAR */
+.navbar{
+background:#131921;
 color:white;
-padding:60px 20px;
-text-align:center;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:12px 20px;
+position:fixed;
+width:100%;
+top:0;
+z-index:1000;
 }
 
-header h1 {
-font-size:42px;
-margin:0;
-}
-
-header p {
+.logo{
 font-size:20px;
-margin-top:15px;
+font-weight:bold;
 }
 
-section {
-padding:70px 20px;
-text-align:center;
-}
-
-.sell-section {
-background:#111;
-color:white;
-}
-
-.sell-section h2 {
-font-size:36px;
-margin-bottom:20px;
-}
-
-.repair-section {
-background:white;
-}
-
-.repair-section h2 {
-font-size:36px;
-margin-bottom:20px;
-}
-
-p {
-font-size:20px;
-margin:10px 0;
-}
-
-button {
-padding:18px 35px;
-font-size:20px;
-border:none;
-border-radius:8px;
-color:white;
+.menu-icon{
+font-size:25px;
 cursor:pointer;
-margin-top:20px;
 }
 
-.sell-btn {
+/* SIDE MENU */
+.sidemenu{
+height:100%;
+width:0;
+position:fixed;
+top:0;
+left:0;
+background:#111;
+overflow-x:hidden;
+transition:0.4s;
+padding-top:60px;
+z-index:2000;
+}
+
+.sidemenu a{
+padding:10px 25px;
+text-decoration:none;
+color:white;
+display:block;
+font-size:18px;
+}
+
+.sidemenu a:hover{
 background:red;
 }
 
-.sell-btn:hover {
-background:darkred;
+.closebtn{
+position:absolute;
+top:15px;
+right:20px;
+font-size:30px;
+cursor:pointer;
 }
 
-.repair-btn {
+/* SEARCH BAR */
+.search-bar{
+margin-top:70px;
+background:#232f3e;
+padding:15px;
+text-align:center;
+}
+
+.search-bar input{
+padding:8px;
+width:200px;
+border-radius:5px;
+border:none;
+}
+
+.search-bar select{
+padding:8px;
+border-radius:5px;
+border:none;
+}
+
+.search-bar button{
+padding:8px 15px;
+background:#febd69;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+/* PRODUCTS GRID */
+.products{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+padding:30px;
+}
+
+.card{
+background:white;
+padding:15px;
+border-radius:8px;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+text-align:center;
+}
+
+.card img{
+width:100%;
+height:180px;
+object-fit:cover;
+border-radius:5px;
+}
+
+.price{
+color:#b12704;
+font-size:18px;
+font-weight:bold;
+margin:10px 0;
+}
+
+.card button{
+padding:8px 15px;
+border:none;
+border-radius:20px;
+cursor:pointer;
+margin:5px;
+}
+
+.buy-btn{
+background:#ff9900;
+}
+
+.pay-btn{
+background:#28a745;
+color:white;
+}
+
+/* REPAIR SECTION */
+.repair{
+background:white;
+padding:40px;
+text-align:center;
+}
+
+.repair button{
 background:green;
+color:white;
+padding:10px 20px;
+border:none;
+border-radius:20px;
+cursor:pointer;
 }
 
-.repair-btn:hover {
-background:darkgreen;
-}
-
-footer {
-background:black;
+/* FOOTER */
+footer{
+background:#131921;
 color:white;
 text-align:center;
-padding:30px;
-font-size:18px;
+padding:20px;
 }
 </style>
+
+<script>
+function openMenu(){
+document.getElementById("mySidemenu").style.width="250px";
+}
+function closeMenu(){
+document.getElementById("mySidemenu").style.width="0";
+}
+</script>
+
 </head>
 
 <body>
 
-<header>
-<h1>VYRO Speaker Store & Repair</h1>
-<p>All India Speaker Sale & Service 🇮🇳</p>
-</header>
+<!-- NAVBAR -->
+<div class="navbar">
+<span class="menu-icon" onclick="openMenu()">☰</span>
+<div class="logo">VYRO Speaker Store</div>
+</div>
 
-<!-- SELL SECTION -->
-<section class="sell-section">
-<h2>🔥 Buy Premium Bluetooth Speakers</h2>
+<!-- SIDE MENU -->
+<div id="mySidemenu" class="sidemenu">
+<span class="closebtn" onclick="closeMenu()">×</span>
+<a href="#">Home</a>
+<a href="#">Products</a>
+<a href="#">Repair</a>
+<a href="#">Contact</a>
+</div>
 
-<p>High Quality Sound & Deep Bass</p>
-<p>All India Delivery Available</p>
-<p>Cash on Delivery & Online Payment Available</p>
+<!-- SEARCH BAR -->
+<div class="search-bar">
+<input type="text" placeholder="Search Speakers...">
+<select>
+<option>All Category</option>
+<option>Portable Speaker</option>
+<option>Home Theatre</option>
+<option>DJ Speaker</option>
+<option>Bluetooth Speaker</option>
+<option>AC/DC Component</option>
+</select>
+<button>Search</button>
+</div>
 
-<h3 style="font-size:26px; margin-top:30px;">🛡 6 Months Service Warranty</h3>
-<p>Manufacturing defects only</p>
-<p>Physical & water damage not covered</p>
+<!-- PRODUCTS -->
+<div class="products">
 
-<a href="https://wa.me/919610651006">
-<button class="sell-btn">🛒 Order Now on WhatsApp</button>
+<div class="card">
+<img src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad">
+<h3>Portable Bluetooth Speaker</h3>
+<div class="price">₹1,499</div>
+<button class="buy-btn">Add to Cart</button>
+<a href="upi://pay?pa=9610651006-2@ybl&pn=VYRO%20Store&cu=INR">
+<button class="pay-btn">Buy Now</button>
 </a>
-</section>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1593784991095-a205069470b6">
+<h3>Home Theatre System</h3>
+<div class="price">₹4,999</div>
+<button class="buy-btn">Add to Cart</button>
+<a href="upi://pay?pa=9610651006-2@ybl&pn=VYRO%20Store&cu=INR">
+<button class="pay-btn">Buy Now</button>
+</a>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1518444028785-8a8b7f3c4a1b">
+<h3>DJ Bass Speaker</h3>
+<div class="price">₹7,999</div>
+<button class="buy-btn">Add to Cart</button>
+<a href="upi://pay?pa=9610651006-2@ybl&pn=VYRO%20Store&cu=INR">
+<button class="pay-btn">Buy Now</button>
+</a>
+</div>
+
+</div>
 
 <!-- REPAIR SECTION -->
-<section class="repair-section">
-<h2>🔧 Professional Speaker Repair Service</h2>
-
-<p>No Sound / Low Bass / Power Issue Fix</p>
-<p>All India Courier Repair Available</p>
-
-<h3 style="font-size:26px; margin-top:30px;">Secure Repair Process</h3>
-<p>1️⃣ Contact on WhatsApp</p>
-<p>2️⃣ Send Problem Details</p>
-<p>3️⃣ Pay Advance</p>
-<p>4️⃣ Get Video Proof</p>
-<p>5️⃣ Pay Remaining & Delivery</p>
-
+<div class="repair">
+<h2>🔧 Speaker Repair Service</h2>
+<p>No Sound | Low Bass | Power Issue Fix</p>
 <a href="https://wa.me/919610651006">
-<button class="repair-btn">🔧 Repair My Speaker</button>
+<button>Repair My Speaker</button>
 </a>
-</section>
+</div>
 
 <footer>
 © 2026 VYRO Speaker Store | All Rights Reserved 🇮🇳
