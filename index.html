@@ -30,7 +30,32 @@
 <option value="Product Purchase">Buy Product</option>
 <option value="Repair Service">Repair Service</option>
 </select>
+<div id="product-list"></div>
 
+<script>
+fetch("https://docs.google.com/spreadsheets/d/15oEk3CEYMnkheDPxwt1OtC7wNf_-6Mv11-R99x_y9kk/edit?usp=drivesdk")
+.then(res => res.json())
+.then(data => {
+
+let output = "";
+
+data.forEach(product => {
+
+output += `
+<div style="border:1px solid #ddd;padding:10px;margin:10px;">
+<img src="${product.image}" width="150">
+<h3>${product.name}</h3>
+<p>₹${product.price}</p>
+<p>Stock: ${product.stock}</p>
+</div>
+`;
+
+});
+
+document.getElementById("product-list").innerHTML = output;
+
+});
+                         </script>
 <br><br>
 
 <button onclick="sendOrder()" style="background:black;color:white;padding:10px 20px;border:none;border-radius:5px;">
