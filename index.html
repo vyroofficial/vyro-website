@@ -2,14 +2,18 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VYRO - Made In India Speakers</title>
+<title>VYRO - Feel The Bass</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#f3f3f3;}
+body{
+margin:0;
+font-family:Arial;
+background:#0f0f14;
+color:white;
+}
 
 header{
-background:#232f3e;
-color:white;
+background:#111;
 padding:15px;
 display:flex;
 justify-content:space-between;
@@ -17,72 +21,108 @@ align-items:center;
 position:sticky;
 top:0;
 z-index:1000;
+box-shadow:0 0 10px #8000ff;
 }
 
 .logo{
-color:#ff9900;
-font-size:22px;
+font-size:24px;
 font-weight:bold;
+color:#00ffcc;
 }
 
-nav span{
-background:#ff9900;
+.cart-btn{
+background:#00ffcc;
 color:black;
-padding:6px 12px;
+padding:8px 15px;
+border:none;
 border-radius:20px;
 cursor:pointer;
 font-weight:bold;
 }
 
-.hero{
-background:#ff9900;
-color:white;
-text-align:center;
-padding:50px 20px;
+.categories{
+display:flex;
+overflow-x:auto;
+background:#1a1a22;
+padding:10px;
+position:sticky;
+top:60px;
+z-index:999;
 }
 
-.section-title{
-text-align:center;
-margin-top:40px;
-font-size:22px;
-font-weight:bold;
-color:#232f3e;
+.categories div{
+margin-right:15px;
+padding:8px 15px;
+background:#8000ff;
+border-radius:20px;
+cursor:pointer;
+white-space:nowrap;
+}
+
+.section{
+padding:30px 15px;
 }
 
 .products{
 display:flex;
 flex-wrap:wrap;
 justify-content:center;
-padding:20px;
 }
 
 .card{
-background:white;
-width:260px;
+background:#1a1a22;
+width:250px;
 margin:15px;
 padding:15px;
-border-radius:8px;
-box-shadow:0 2px 10px rgba(0,0,0,0.1);
+border-radius:10px;
+box-shadow:0 0 10px #8000ff55;
 transition:0.3s;
 }
 
-.card:hover{transform:scale(1.05);}
+.card:hover{
+transform:scale(1.05);
+box-shadow:0 0 20px #00ffcc;
+}
 
 .card img{
 width:100%;
-border-radius:5px;
+border-radius:8px;
 }
 
-button{
-padding:8px 15px;
+.add-btn{
+background:#00ffcc;
+color:black;
+padding:8px;
 border:none;
 border-radius:20px;
 cursor:pointer;
 margin-top:8px;
+font-weight:bold;
+width:100%;
 }
 
-.add{background:#ffd814;}
-.checkout-btn{background:#ff9900;color:black;}
+.repair{
+background:#111;
+padding:60px 20px;
+text-align:center;
+box-shadow:0 0 20px #8000ff;
+}
+
+.repair h2{
+font-size:28px;
+color:#00ffcc;
+}
+
+.repair button{
+background:#8000ff;
+color:white;
+padding:12px 25px;
+border:none;
+border-radius:25px;
+cursor:pointer;
+margin-top:15px;
+font-weight:bold;
+}
 
 .cart-page{
 display:none;
@@ -90,23 +130,35 @@ padding:20px;
 }
 
 .cart-item{
-background:white;
+background:#1a1a22;
 padding:10px;
-margin:10px auto;
-max-width:500px;
+margin:10px 0;
 border-radius:8px;
 }
 
-.repair{
-background:white;
-padding:40px 20px;
-margin-top:40px;
-text-align:center;
+.qty-btn{
+background:#8000ff;
+color:white;
+border:none;
+padding:5px 10px;
+margin:0 5px;
+cursor:pointer;
+}
+
+.checkout{
+background:#00ffcc;
+color:black;
+padding:12px;
+border:none;
+border-radius:25px;
+cursor:pointer;
+font-weight:bold;
+width:100%;
+margin-top:15px;
 }
 
 footer{
-background:#232f3e;
-color:white;
+background:#111;
 text-align:center;
 padding:20px;
 margin-top:30px;
@@ -118,109 +170,70 @@ margin-top:30px;
 
 <header>
 <div class="logo">VYRO 🇮🇳</div>
-<nav>
-<span onclick="showCart()">Cart (<span id="cart-count">0</span>)</span>
-</nav>
+<button class="cart-btn" onclick="showCart()">Cart (<span id="count">0</span>)</button>
 </header>
+
+<div class="categories">
+<div>Portable</div>
+<div>Bluetooth</div>
+<div>High Power</div>
+<div>Bass Booster</div>
+<div>Party Box</div>
+</div>
 
 <div id="home">
 
-<div class="hero">
-<h1>Premium Bluetooth Speakers – Made In India 🇮🇳</h1>
-<p>Powerful Sound | Trusted Local Brand</p>
-</div>
-
-<div class="section-title">Portable Speakers</div>
+<div class="section">
+<h2>🔥 Featured Speakers</h2>
 <div class="products">
 
 <div class="card">
 <img src="https://images.unsplash.com/photo-1585386959984-a4155228e89d">
 <h3>Portable Speaker</h3>
-<p>Price: ₹ ___</p>
-<button class="add"
-onclick="addToCart('Portable Speaker',0)">
-Add To Cart</button>
+<p>Price: ₹___</p>
+<button class="add-btn" onclick="addCart('Portable Speaker')">Add To Cart</button>
 </div>
-
-</div>
-
-<div class="section-title">Home Theater Speakers</div>
-<div class="products">
 
 <div class="card">
 <img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1">
-<h3>Home Theater Speaker</h3>
-<p>Price: ₹ ___</p>
-<button class="add"
-onclick="addToCart('Home Theater Speaker',0)">
-Add To Cart</button>
+<h3>High Power Speaker</h3>
+<p>Price: ₹___</p>
+<button class="add-btn" onclick="addCart('High Power Speaker')">Add To Cart</button>
 </div>
 
 </div>
-
-<div class="section-title">Party Box / Bass Booster</div>
-<div class="products">
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1598514982841-3f4ec89e60a6">
-<h3>Party Box Speaker</h3>
-<p>Price: ₹ ___</p>
-<button class="add"
-onclick="addToCart('Party Box Speaker',0)">
-Add To Cart</button>
-</div>
-
 </div>
 
 <div class="repair">
-<h2>ALL TYPE SPEAKER REPAIR</h2>
-<p>Upgrade your speaker</p>
+<h2>UPGRADE YOUR SPEAKER</h2>
 <p>Waterproof Service Available</p>
-<p>Bass Upgrade & Sound Boost</p>
+<p>Bass Boost Upgrade</p>
+<p>All Type Speaker Repair</p>
+<button onclick="contact()">Contact On WhatsApp</button>
 </div>
 
 </div>
 
 <div id="cart" class="cart-page">
-<h2>🛒 Your Cart</h2>
-<div id="cart-items"></div>
-
-<center>
-<input type="text" id="coupon" placeholder="Coupon Code">
-<button onclick="applyCoupon()">Apply</button>
-</center>
-
-<h3 style="text-align:center;">
-Total: ₹<span id="total">0</span>
-</h3>
-
-<center>
-<button class="checkout-btn" onclick="checkout()">
-Proceed To Checkout
-</button>
+<h2>Your Cart</h2>
+<div id="cartItems"></div>
+<h3>Total: ₹<span id="total">0</span></h3>
+<button class="checkout" onclick="checkout()">Proceed To Checkout</button>
 <br><br>
-<button onclick="showHome()">Back</button>
-</center>
+<button onclick="backHome()">Back</button>
 </div>
 
 <footer>
-<p>© 2026 VYRO Speaker Store</p>
-<p>Made In India 🇮🇳 | Local Trusted Brand</p>
+<p>Feel The Bass. Own The Power.</p>
+<p>Made In India 🇮🇳</p>
 </footer>
 
 <script>
-let cart = [];
-let discount = 0;
+let cart=[];
 
-function updateCount(){
-document.getElementById("cart-count").innerText=cart.length;
-}
-
-function addToCart(name,price){
-let existing=cart.find(item=>item.name===name);
-if(existing){existing.qty+=1;}
-else{cart.push({name:name,price:price,qty:1});}
-updateCount();
+function addCart(name){
+cart.push(name);
+document.getElementById("count").innerText=cart.length;
 alert("Added to Cart");
 }
 
@@ -230,58 +243,40 @@ document.getElementById("cart").style.display="block";
 renderCart();
 }
 
-function showHome(){
+function backHome(){
 document.getElementById("home").style.display="block";
 document.getElementById("cart").style.display="none";
 }
 
 function renderCart(){
-let total=0;
 let html="";
 cart.forEach((item,index)=>{
-total+=item.price*item.qty;
 html+=`
 <div class="cart-item">
-<h3>${item.name}</h3>
-<button onclick="changeQty(${index},-1)">-</button>
-Qty: ${item.qty}
-<button onclick="changeQty(${index},1)">+</button>
-<button onclick="removeItem(${index})">Remove</button>
-</div>
-`;
+${item}
+<button class="qty-btn" onclick="removeItem(${index})">Remove</button>
+</div>`;
 });
-total-=discount;
-document.getElementById("cart-items").innerHTML=html;
-document.getElementById("total").innerText=total;
-}
-
-function changeQty(i,c){
-cart[i].qty+=c;
-if(cart[i].qty<=0){cart.splice(i,1);}
-renderCart();
-updateCount();
+document.getElementById("cartItems").innerHTML=html;
+document.getElementById("total").innerText=cart.length*300;
 }
 
 function removeItem(i){
 cart.splice(i,1);
 renderCart();
-updateCount();
-}
-
-function applyCoupon(){
-if(document.getElementById("coupon").value==="VYRO10"){
-discount=200;
-alert("Coupon Applied");
-}else{alert("Invalid Coupon");}
-renderCart();
+document.getElementById("count").innerText=cart.length;
 }
 
 function checkout(){
-let message="New Order:%0A";
+let msg="New Order:%0A";
 cart.forEach(item=>{
-message+=item.name+" x "+item.qty+"%0A";
+msg+=item+"%0A";
 });
-window.open("https://wa.me/919610651006?text="+message,"_blank");
+window.open("https://wa.me/919610651006?text="+msg,"_blank");
+}
+
+function contact(){
+window.open("https://wa.me/919610651006","_blank");
 }
 </script>
 
