@@ -1,5 +1,83 @@
 <!DOCTYPE html>
-<html>
+<html><section style="padding:20px; max-width:500px; margin:auto;">
+
+<h2>Checkout - VYRO</h2>
+
+<label>Product Name</label>
+<input type="text" id="product" value="VYRO BoomBox Mini" readonly>
+
+<label>Quantity</label>
+<input type="number" id="qty" value="1" min="1">
+
+<label>Price (₹)</label>
+<input type="number" id="price" value="399" readonly>
+
+<hr>
+
+<h3>Customer Details</h3>
+
+<input type="text" id="name" placeholder="Full Name" required>
+<input type="tel" id="phone" placeholder="Phone Number" required>
+<input type="email" id="email" placeholder="Email" required>
+
+<textarea id="address" placeholder="Full Address" required></textarea>
+
+<input type="text" id="city" placeholder="City" required>
+<input type="text" id="state" placeholder="State" required>
+<input type="text" id="pincode" placeholder="PIN Code" required>
+
+<select id="ordertype">
+<option value="Product Purchase">Buy Product</option>
+<option value="Repair Service">Repair Service</option>
+</select>
+
+<br><br>
+
+<button onclick="sendOrder()" style="background:black;color:white;padding:10px 20px;border:none;border-radius:5px;">
+Place Order
+</button>
+
+</section>
+
+<script>
+function sendOrder(){
+
+let product = document.getElementById("product").value;
+let qty = document.getElementById("qty").value;
+let price = document.getElementById("price").value;
+let total = qty * price;
+
+let name = document.getElementById("name").value;
+let phone = document.getElementById("phone").value;
+let email = document.getElementById("email").value;
+let address = document.getElementById("address").value;
+let city = document.getElementById("city").value;
+let state = document.getElementById("state").value;
+let pincode = document.getElementById("pincode").value;
+let ordertype = document.getElementById("ordertype").value;
+
+let delivery = ordertype === "Product Purchase" ? "FREE Delivery" : "Customer Will Send Item";
+
+let message = 
+"🟢 NEW ORDER - VYRO\n\n" +
+"🛍 Product: " + product + "\n" +
+"🔢 Quantity: " + qty + "\n" +
+"💰 Total: ₹" + total + "\n" +
+"🚚 Delivery: " + delivery + "\n\n" +
+"👤 Name: " + name + "\n" +
+"📞 Phone: " + phone + "\n" +
+"📧 Email: " + email + "\n\n" +
+"🏠 Address:\n" + address + "\n" +
+city + ", " + state + "\n" +
+"PIN: " + pincode + "\n\n" +
+"📝 Order Type: " + ordertype;
+
+let url = "https://wa.me/919610651006?text=" + encodeURIComponent(message);
+
+window.open(url, "_blank");
+
+}
+</script>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VYRO - Feel The Bass</title>
