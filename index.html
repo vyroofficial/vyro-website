@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>VYRO Official Store</title>
+<title>VYRO Official</title>
 
 <style>
 body{
@@ -13,35 +13,43 @@ color:white;
 }
 
 header{
-background:black;
-padding:15px;
+background:#000;
+padding:18px;
 text-align:center;
-font-size:22px;
+font-size:24px;
 font-weight:bold;
 letter-spacing:2px;
 }
 
-#category-filter{
-text-align:center;
-padding:10px;
+.section{
+padding:20px;
 }
 
-#category-filter button{
-margin:5px;
-padding:8px 15px;
-background:#222;
-color:white;
-border:none;
-border-radius:20px;
+.horizontal-scroll{
+display:flex;
+overflow-x:auto;
+gap:15px;
+padding:10px 0;
+}
+
+.cat-box{
+min-width:160px;
+background:#1c1c1c;
+padding:15px;
+border-radius:10px;
+text-align:center;
 cursor:pointer;
 }
 
-#product-list{
+.cat-box:hover{
+background:#ff6600;
+}
+
+.products{
 display:flex;
 flex-wrap:wrap;
-justify-content:center;
 gap:20px;
-padding:20px;
+justify-content:center;
 }
 
 .product{
@@ -49,8 +57,8 @@ background:#1c1c1c;
 padding:15px;
 width:220px;
 border-radius:12px;
-box-shadow:0 4px 15px rgba(0,0,0,0.5);
 text-align:center;
+box-shadow:0 4px 15px rgba(0,0,0,0.6);
 }
 
 .product img{
@@ -67,10 +75,19 @@ border:none;
 padding:8px 12px;
 border-radius:6px;
 cursor:pointer;
-margin-top:5px;
+margin-top:6px;
 }
 
-#cart-section{
+#cart{
+display:none;
+background:#1c1c1c;
+margin:20px;
+padding:20px;
+border-radius:12px;
+}
+
+#checkout{
+display:none;
 background:#1c1c1c;
 margin:20px;
 padding:20px;
@@ -84,14 +101,6 @@ margin:6px 0;
 border:none;
 border-radius:6px;
 }
-
-#checkout-form{
-display:none;
-background:#1c1c1c;
-margin:20px;
-padding:20px;
-border-radius:12px;
-}
 </style>
 </head>
 
@@ -99,153 +108,148 @@ border-radius:12px;
 
 <header>VYRO OFFICIAL STORE</header>
 
-<div id="category-filter"></div>
-<div id="product-list"></div>
+<div class="section">
+<h2>🔥 Speaker Categories</h2>
+<div id="categories" class="horizontal-scroll"></div>
+</div>
 
-<div id="cart-section">
+<div class="section">
+<h2>🎵 Latest Speakers</h2>
+<div id="products" class="products"></div>
+<div style="text-align:center;margin-top:15px;">
+<button onclick="filterCategory('all')">View All</button>
+</div>
+</div>
+
+<div class="section">
+<h2>🛠 Repair Your Speaker</h2>
+<p>Send your speaker for professional repair service.</p>
+<button onclick="addRepair()">Request Repair</button>
+</div>
+
+<div id="cart">
 <h2>🛒 Cart</h2>
-<div id="cart-items"></div>
-<p><b>Total: ₹<span id="cart-total">0</span></b></p>
+<div id="cartItems"></div>
+<p><b>Total ₹ <span id="total">0</span></b></p>
 <button onclick="showCheckout()">Checkout</button>
 </div>
 
-<div id="checkout-form">
+<div id="checkout">
 <h2>Checkout Details</h2>
-
-<input type="text" id="name" placeholder="Full Name" required>
-<input type="tel" id="phone" placeholder="Phone Number" required>
-<input type="email" id="email" placeholder="Email" required>
-<textarea id="address" placeholder="Full Address" required></textarea>
-<input type="text" id="city" placeholder="City" required>
-<input type="text" id="state" placeholder="State" required>
-<input type="text" id="pincode" placeholder="PIN Code" required>
-
+<input type="text" id="name" placeholder="Full Name">
+<input type="tel" id="phone" placeholder="Phone">
+<input type="email" id="email" placeholder="Email">
+<textarea id="address" placeholder="Full Address"></textarea>
+<input type="text" id="city" placeholder="City">
+<input type="text" id="state" placeholder="State">
+<input type="text" id="pincode" placeholder="PIN Code">
 <button onclick="placeOrder()">Place Order</button>
 </div>
 
 <script>
 
-let cart = [];
-let productsData = [];
+let cart=[];
+let allProducts=[];
 
 fetch("https://opensheet.elk.sh/15oEk3CEYMnkheDPxwt1OtC7wNf_-6Mv11-R99x_y9kk/Sheet1")
-.then(res => res.json())
-.then(data => {
-productsData = data;
-renderCategories(data);
-renderProducts(data);
+.then(res=>res.json())
+.then(data=>{
+allProducts=data;
+createCategories(data);
+showProducts(data.slice(0,4)); // only first 4 show
 });
 
-function renderCategories(data){
-let categories = [...new Set(data.map(p => p.category))];
-let buttons = `<button onclick="filterCategory('all')">All</button>`;
-categories.forEach(cat=>{
-buttons += `<button onclick="filterCategory('${cat}')">${cat}</button>`;
+function createCategories(data){
+let cats=[...new Set(data.map(p=>p.category))];
+let html="";
+cats.forEach(c=>{
+html+=`<div class="cat-box" onclick="filterCategory('${c}')">${c}</div>`;
 });
-document.getElementById("category-filter").innerHTML = buttons;
+document.getElementById("categories").innerHTML=html;
 }
 
-function filterCategory(category){
-if(category === "all"){
-renderProducts(productsData);
-}else{
-let filtered = productsData.filter(p => p.category === category);
-renderProducts(filtered);
+function filterCategory(cat){
+if(cat==="all"){ showProducts(allProducts); }
+else{
+let filtered=allProducts.filter(p=>p.category===cat);
+showProducts(filtered);
 }
 }
 
-function renderProducts(data){
-let output = "";
-data.forEach(product=>{
-output += `
+function showProducts(data){
+let html="";
+data.forEach(p=>{
+html+=`
 <div class="product">
-<img src="${product.image}">
-<h3>${product.name}</h3>
-<p>₹${product.price}</p>
-<p>Stock: ${product.stock}</p>
-<button onclick='addToCart("${product.name}", ${product.price})'>Add to Cart</button>
-</div>
-`;
+<img src="${p.image}">
+<h3>${p.name}</h3>
+<p>₹ ${p.price}</p>
+<button onclick="addToCart('${p.name}',${p.price})">Add to Cart</button>
+</div>`;
 });
-document.getElementById("product-list").innerHTML = output;
+document.getElementById("products").innerHTML=html;
 }
 
-function addToCart(name, price){
-let existing = cart.find(item => item.name === name);
-if(existing){
-existing.qty += 1;
-}else{
-cart.push({name, price, qty:1});
+function addToCart(name,price){
+cart.push({name,price});
+document.getElementById("cart").style.display="block";
+updateCart();
 }
+
+function addRepair(){
+cart.push({name:"Speaker Repair Service",price:0});
+document.getElementById("cart").style.display="block";
 updateCart();
 }
 
 function updateCart(){
-let html = "";
-let total = 0;
-
-cart.forEach((item,index)=>{
-html += `
-<p>
-${item.name} - ₹${item.price} x ${item.qty}
-<button onclick="removeItem(${index})">❌</button>
-</p>
-`;
-total += item.price * item.qty;
+let html="";
+let total=0;
+cart.forEach(i=>{
+html+=`<p>${i.name} - ₹${i.price}</p>`;
+total+=Number(i.price);
 });
-
-document.getElementById("cart-items").innerHTML = html;
-document.getElementById("cart-total").innerText = total;
-}
-
-function removeItem(index){
-cart.splice(index,1);
-updateCart();
+document.getElementById("cartItems").innerHTML=html;
+document.getElementById("total").innerText=total;
 }
 
 function showCheckout(){
-if(cart.length === 0){
-alert("Cart is empty");
-return;
-}
-document.getElementById("checkout-form").style.display = "block";
-window.scrollTo(0, document.body.scrollHeight);
+document.getElementById("checkout").style.display="block";
+window.scrollTo(0,document.body.scrollHeight);
 }
 
 function placeOrder(){
 
-let name = document.getElementById("name").value;
-let phone = document.getElementById("phone").value;
-let email = document.getElementById("email").value;
-let address = document.getElementById("address").value;
-let city = document.getElementById("city").value;
-let state = document.getElementById("state").value;
-let pincode = document.getElementById("pincode").value;
+let total=document.getElementById("total").innerText;
+let name=document.getElementById("name").value;
+let phone=document.getElementById("phone").value;
+let email=document.getElementById("email").value;
+let address=document.getElementById("address").value;
+let city=document.getElementById("city").value;
+let state=document.getElementById("state").value;
+let pincode=document.getElementById("pincode").value;
 
-let total = document.getElementById("cart-total").innerText;
-
-let productText = "";
-cart.forEach(item=>{
-productText += item.name + " x" + item.qty + " - ₹" + (item.price*item.qty) + "%0A";
+let items="";
+cart.forEach(i=>{
+items+=i.name+" - ₹"+i.price+"%0A";
 });
 
-let message =
-"🟢 NEW ORDER - VYRO%0A%0A" +
-"🛍 Products:%0A" + productText +
-"%0A💰 Total: ₹" + total +
-"%0A%0A👤 Name: " + name +
-"%0A📞 Phone: " + phone +
-"%0A📧 Email: " + email +
-"%0A%0A🏠 Address:%0A" + address +
-"%0A" + city + ", " + state +
-"%0A PIN: " + pincode;
+let msg=
+"🟢 NEW ORDER - VYRO%0A%0A"+
+"Products:%0A"+items+
+"%0ATotal: ₹"+total+
+"%0A%0AName: "+name+
+"%0APhone: "+phone+
+"%0AEmail: "+email+
+"%0A%0AAddress:%0A"+address+
+"%0A"+city+", "+state+
+"%0APIN: "+pincode;
 
-let url = "https://wa.me/919610651006?text=" + message;
+window.open("https://wa.me/919610651006?text="+msg);
 
-window.open(url,"_blank");
 }
 
 </script>
 
 </body>
-  </html>
+                                           </html>
