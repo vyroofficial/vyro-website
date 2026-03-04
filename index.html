@@ -1,255 +1,331 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>VYRO Official</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VYRO - Feel The Bass</title>
 
 <style>
 body{
 margin:0;
 font-family:Arial;
-background:#0f0f0f;
+background:#0f0f14;
 color:white;
 }
 
 header{
-background:#000;
-padding:18px;
-text-align:center;
+background:#111;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+position:sticky;
+top:0;
+z-index:1000;
+box-shadow:0 0 10px #8000ff;
+}
+
+.logo{
 font-size:24px;
 font-weight:bold;
-letter-spacing:2px;
+color:#00ffcc;
+}
+
+.cart-btn{
+background:#00ffcc;
+color:black;
+padding:8px 15px;
+border:none;
+border-radius:20px;
+cursor:pointer;
+font-weight:bold;
+}
+
+.categories{
+display:flex;
+overflow-x:auto;
+background:#1a1a22;
+padding:10px;
+position:sticky;
+top:60px;
+z-index:999;
+}
+
+.categories div{
+margin-right:15px;
+padding:8px 15px;
+background:#8000ff;
+border-radius:20px;
+cursor:pointer;
+white-space:nowrap;
 }
 
 .section{
-padding:20px;
-}
-
-.horizontal-scroll{
-display:flex;
-overflow-x:auto;
-gap:15px;
-padding:10px 0;
-}
-
-.cat-box{
-min-width:160px;
-background:#1c1c1c;
-padding:15px;
-border-radius:10px;
-text-align:center;
-cursor:pointer;
-}
-
-.cat-box:hover{
-background:#ff6600;
+padding:30px 15px;
 }
 
 .products{
 display:flex;
 flex-wrap:wrap;
-gap:20px;
 justify-content:center;
 }
 
-.product{
-background:#1c1c1c;
+.card{
+background:#1a1a22;
+width:250px;
+margin:15px;
 padding:15px;
-width:220px;
-border-radius:12px;
-text-align:center;
-box-shadow:0 4px 15px rgba(0,0,0,0.6);
-}
-
-.product img{
-width:100%;
-height:150px;
-object-fit:cover;
 border-radius:10px;
+box-shadow:0 0 10px #8000ff55;
+transition:0.3s;
 }
 
-button{
-background:#ff6600;
+.card:hover{
+transform:scale(1.05);
+box-shadow:0 0 20px #00ffcc;
+}
+
+.card img{
+width:100%;
+border-radius:8px;
+}
+
+.add-btn{
+background:#00ffcc;
+color:black;
+padding:8px;
+border:none;
+border-radius:20px;
+cursor:pointer;
+margin-top:8px;
+font-weight:bold;
+width:100%;
+}
+
+.view-btn{
+background:#8000ff;
+color:white;
+padding:10px 20px;
+border:none;
+border-radius:25px;
+cursor:pointer;
+margin-top:20px;
+}
+
+.repair{
+background:#111;
+padding:60px 20px;
+text-align:center;
+box-shadow:0 0 20px #8000ff;
+}
+
+.repair h2{
+font-size:28px;
+color:#00ffcc;
+}
+
+.repair button{
+background:#8000ff;
+color:white;
+padding:12px 25px;
+border:none;
+border-radius:25px;
+cursor:pointer;
+margin-top:15px;
+font-weight:bold;
+}
+
+.cart-page{
+display:none;
+padding:20px;
+}
+
+.cart-item{
+background:#1a1a22;
+padding:10px;
+margin:10px 0;
+border-radius:8px;
+}
+
+.qty-btn{
+background:#8000ff;
 color:white;
 border:none;
-padding:8px 12px;
-border-radius:6px;
+padding:5px 10px;
+margin:0 5px;
 cursor:pointer;
-margin-top:6px;
 }
 
-#cart{
-display:none;
-background:#1c1c1c;
-margin:20px;
-padding:20px;
-border-radius:12px;
-}
-
-#checkout{
-display:none;
-background:#1c1c1c;
-margin:20px;
-padding:20px;
-border-radius:12px;
-}
-
-input, textarea{
-width:100%;
-padding:8px;
-margin:6px 0;
+.checkout{
+background:#00ffcc;
+color:black;
+padding:12px;
 border:none;
-border-radius:6px;
+border-radius:25px;
+cursor:pointer;
+font-weight:bold;
+width:100%;
+margin-top:15px;
+}
+
+footer{
+background:#111;
+text-align:center;
+padding:20px;
+margin-top:30px;
 }
 </style>
 </head>
 
 <body>
 
-<header>VYRO OFFICIAL STORE</header>
+<header>
+<div class="logo">VYRO 🇮🇳</div>
+<button class="cart-btn" onclick="showCart()">Cart (<span id="count">0</span>)</button>
+</header>
+
+<div class="categories">
+<div>Portable</div>
+<div>Bluetooth</div>
+<div>High Power</div>
+<div>Party Box</div>
+</div>
+
+<div id="home">
 
 <div class="section">
-<h2>🔥 Speaker Categories</h2>
-<div id="categories" class="horizontal-scroll"></div>
+<h2>🔥 Featured Speakers</h2>
+<div class="products">
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1585386959984-a4155228e89d">
+<h3>Portable Speaker</h3>
+<p>Price: ₹1299</p>
+<button class="add-btn" onclick="addCart('Portable Speaker',1299)">Add To Cart</button>
 </div>
 
-<div class="section">
-<h2>🎵 Latest Speakers</h2>
-<div id="products" class="products"></div>
-<div style="text-align:center;margin-top:15px;">
-<button onclick="filterCategory('all')">View All</button>
-</div>
-</div>
-
-<div class="section">
-<h2>🛠 Repair Your Speaker</h2>
-<p>Send your speaker for professional repair service.</p>
-<button onclick="addRepair()">Request Repair</button>
+<div class="card">
+<img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1">
+<h3>High Power Speaker</h3>
+<p>Price: ₹2499</p>
+<button class="add-btn" onclick="addCart('High Power Speaker',2499)">Add To Cart</button>
 </div>
 
-<div id="cart">
-<h2>🛒 Cart</h2>
+</div>
+
+<center>
+<button class="view-btn" onclick="scrollToRepair()">View All & Services</button>
+</center>
+
+</div>
+
+<div class="repair" id="repair">
+<h2>🔧 Speaker Repair Service</h2>
+
+<p>Bluetooth Repair – ₹299</p>
+<p>Home Theatre – ₹499</p>
+<p>DJ Speaker – ₹699</p>
+
+<br>
+
+<p>Bass Boost Upgrade</p>
+<p>All Type Speaker Repair</p>
+
+<button onclick="contact()">Contact On WhatsApp</button>
+</div>
+
+</div>
+
+<div id="cart" class="cart-page">
+<h2>Your Cart</h2>
 <div id="cartItems"></div>
-<p><b>Total ₹ <span id="total">0</span></b></p>
-<button onclick="showCheckout()">Checkout</button>
+<h3>Total: ₹<span id="total">0</span></h3>
+<button class="checkout" onclick="checkout()">Proceed To Checkout</button>
+<br><br>
+<button onclick="backHome()">Back</button>
 </div>
 
-<div id="checkout">
-<h2>Checkout Details</h2>
-<input type="text" id="name" placeholder="Full Name">
-<input type="tel" id="phone" placeholder="Phone">
-<input type="email" id="email" placeholder="Email">
-<textarea id="address" placeholder="Full Address"></textarea>
-<input type="text" id="city" placeholder="City">
-<input type="text" id="state" placeholder="State">
-<input type="text" id="pincode" placeholder="PIN Code">
-<button onclick="placeOrder()">Place Order</button>
-</div>
+<footer>
+<p>Feel The Bass. Own The Power.</p>
+<p>Made In India 🇮🇳</p>
+</footer>
 
 <script>
-
 let cart=[];
-let allProducts=[];
 
-fetch("https://opensheet.elk.sh/15oEk3CEYMnkheDPxwt1OtC7wNf_-6Mv11-R99x_y9kk/Sheet1")
-.then(res=>res.json())
-.then(data=>{
-allProducts=data;
-createCategories(data);
-showProducts(data.slice(0,4)); // only first 4 show
-});
-
-function createCategories(data){
-let cats=[...new Set(data.map(p=>p.category))];
-let html="";
-cats.forEach(c=>{
-html+=`<div class="cat-box" onclick="filterCategory('${c}')">${c}</div>`;
-});
-document.getElementById("categories").innerHTML=html;
+function addCart(name,price){
+cart.push({name:name,price:price});
+document.getElementById("count").innerText=cart.length;
+alert("Added to Cart");
 }
 
-function filterCategory(cat){
-if(cat==="all"){ showProducts(allProducts); }
-else{
-let filtered=allProducts.filter(p=>p.category===cat);
-showProducts(filtered);
-}
-}
-
-function showProducts(data){
-let html="";
-data.forEach(p=>{
-html+=`
-<div class="product">
-<img src="${p.image}">
-<h3>${p.name}</h3>
-<p>₹ ${p.price}</p>
-<button onclick="addToCart('${p.name}',${p.price})">Add to Cart</button>
-</div>`;
-});
-document.getElementById("products").innerHTML=html;
-}
-
-function addToCart(name,price){
-cart.push({name,price});
+function showCart(){
+document.getElementById("home").style.display="none";
 document.getElementById("cart").style.display="block";
-updateCart();
+renderCart();
 }
 
-function addRepair(){
-cart.push({name:"Speaker Repair Service",price:0});
-document.getElementById("cart").style.display="block";
-updateCart();
+function backHome(){
+document.getElementById("home").style.display="block";
+document.getElementById("cart").style.display="none";
 }
 
-function updateCart(){
+function renderCart(){
 let html="";
 let total=0;
-cart.forEach(i=>{
-html+=`<p>${i.name} - ₹${i.price}</p>`;
-total+=Number(i.price);
+
+cart.forEach((item,index)=>{
+total+=item.price;
+html+=`
+<div class="cart-item">
+${item.name} - ₹${item.price}
+<button class="qty-btn" onclick="removeItem(${index})">Remove</button>
+</div>`;
 });
+
 document.getElementById("cartItems").innerHTML=html;
 document.getElementById("total").innerText=total;
 }
 
-function showCheckout(){
-document.getElementById("checkout").style.display="block";
-window.scrollTo(0,document.body.scrollHeight);
+function removeItem(i){
+cart.splice(i,1);
+renderCart();
+document.getElementById("count").innerText=cart.length;
 }
 
-function placeOrder(){
+function checkout(){
+if(cart.length===0){
+alert("Cart is empty!");
+return;
+}
 
-let total=document.getElementById("total").innerText;
-let name=document.getElementById("name").value;
-let phone=document.getElementById("phone").value;
-let email=document.getElementById("email").value;
-let address=document.getElementById("address").value;
-let city=document.getElementById("city").value;
-let state=document.getElementById("state").value;
-let pincode=document.getElementById("pincode").value;
+let name=prompt("Enter Your Name:");
+let address=prompt("Enter Your Full Address:");
+let pincode=prompt("Enter Pincode:");
 
-let items="";
-cart.forEach(i=>{
-items+=i.name+" - ₹"+i.price+"%0A";
+let msg="New Order:%0A";
+let total=0;
+
+cart.forEach(item=>{
+msg+=item.name+" - ₹"+item.price+"%0A";
+total+=item.price;
 });
 
-let msg=
-"🟢 NEW ORDER - VYRO%0A%0A"+
-"Products:%0A"+items+
-"%0ATotal: ₹"+total+
-"%0A%0AName: "+name+
-"%0APhone: "+phone+
-"%0AEmail: "+email+
-"%0A%0AAddress:%0A"+address+
-"%0A"+city+", "+state+
-"%0APIN: "+pincode;
+msg+="%0ATotal: ₹"+total;
+msg+="%0A%0AName: "+name;
+msg+="%0AAddress: "+address;
+msg+="%0APincode: "+pincode;
 
-window.open("https://wa.me/919610651006?text="+msg);
-
+window.open("https://wa.me/919610651006?text="+msg,"_blank");
 }
 
+function contact(){
+window.open("https://wa.me/919610651006","_blank");
+}
+
+function scrollToRepair(){
+document.getElementById("repair").scrollIntoView({behavior:"smooth"});
+}
 </script>
 
 </body>
-                                           </html>
+  </html>
