@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VYRO - Feel The Bass</title>
 
 <style>
+
 body{
 margin:0;
 font-family:Arial;
@@ -20,7 +22,6 @@ justify-content:space-between;
 align-items:center;
 position:sticky;
 top:0;
-z-index:1000;
 box-shadow:0 0 10px #8000ff;
 }
 
@@ -45,9 +46,6 @@ display:flex;
 overflow-x:auto;
 background:#1a1a22;
 padding:10px;
-position:sticky;
-top:60px;
-z-index:999;
 }
 
 .categories div{
@@ -59,29 +57,20 @@ cursor:pointer;
 white-space:nowrap;
 }
 
-.section{
-padding:30px 15px;
-}
-
 .products{
 display:flex;
 flex-wrap:wrap;
 justify-content:center;
+padding:20px;
 }
 
 .card{
 background:#1a1a22;
-width:250px;
+width:220px;
 margin:15px;
 padding:15px;
 border-radius:10px;
 box-shadow:0 0 10px #8000ff55;
-transition:0.3s;
-}
-
-.card:hover{
-transform:scale(1.05);
-box-shadow:0 0 20px #00ffcc;
 }
 
 .card img{
@@ -97,29 +86,17 @@ border:none;
 border-radius:20px;
 cursor:pointer;
 margin-top:8px;
-font-weight:bold;
 width:100%;
-}
-
-.view-btn{
-background:#8000ff;
-color:white;
-padding:10px 20px;
-border:none;
-border-radius:25px;
-cursor:pointer;
-margin-top:20px;
+font-weight:bold;
 }
 
 .repair{
 background:#111;
 padding:60px 20px;
 text-align:center;
-box-shadow:0 0 20px #8000ff;
 }
 
 .repair h2{
-font-size:28px;
 color:#00ffcc;
 }
 
@@ -130,8 +107,6 @@ padding:12px 25px;
 border:none;
 border-radius:25px;
 cursor:pointer;
-margin-top:15px;
-font-weight:bold;
 }
 
 .cart-page{
@@ -146,15 +121,6 @@ margin:10px 0;
 border-radius:8px;
 }
 
-.qty-btn{
-background:#8000ff;
-color:white;
-border:none;
-padding:5px 10px;
-margin:0 5px;
-cursor:pointer;
-}
-
 .checkout{
 background:#00ffcc;
 color:black;
@@ -162,9 +128,21 @@ padding:12px;
 border:none;
 border-radius:25px;
 cursor:pointer;
-font-weight:bold;
 width:100%;
-margin-top:15px;
+font-weight:bold;
+}
+
+.form{
+display:none;
+padding:20px;
+}
+
+input,textarea{
+width:100%;
+padding:10px;
+margin:8px 0;
+border-radius:6px;
+border:none;
 }
 
 footer{
@@ -173,6 +151,7 @@ text-align:center;
 padding:20px;
 margin-top:30px;
 }
+
 </style>
 </head>
 
@@ -183,149 +162,221 @@ margin-top:30px;
 <button class="cart-btn" onclick="showCart()">Cart (<span id="count">0</span>)</button>
 </header>
 
+
 <div class="categories">
-<div>Portable</div>
-<div>Bluetooth</div>
-<div>High Power</div>
+
+<div>Portable Speaker</div>
+<div>Bluetooth Speaker</div>
+<div>Home Theatre</div>
+<div>Bass Booster</div>
 <div>Party Box</div>
+
 </div>
+
 
 <div id="home">
 
-<div class="section">
-<h2>🔥 Featured Speakers</h2>
 <div class="products">
+
 
 <div class="card">
 <img src="https://images.unsplash.com/photo-1585386959984-a4155228e89d">
 <h3>Portable Speaker</h3>
-<p>Price: ₹1299</p>
-<button class="add-btn" onclick="addCart('Portable Speaker',1299)">Add To Cart</button>
+<p>Price ₹300</p>
+<button class="add-btn" onclick="addCart('Portable Speaker',300)">Add To Cart</button>
 </div>
+
 
 <div class="card">
 <img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1">
-<h3>High Power Speaker</h3>
-<p>Price: ₹2499</p>
-<button class="add-btn" onclick="addCart('High Power Speaker',2499)">Add To Cart</button>
+<h3>Home Theatre</h3>
+<p>Price ₹700</p>
+<button class="add-btn" onclick="addCart('Home Theatre',700)">Add To Cart</button>
 </div>
 
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1518441902117-0f66e3e00f12">
+<h3>Bass Booster Speaker</h3>
+<p>Price ₹500</p>
+<button class="add-btn" onclick="addCart('Bass Booster Speaker',500)">Add To Cart</button>
 </div>
 
-<center>
-<button class="view-btn" onclick="scrollToRepair()">View All & Services</button>
-</center>
 
 </div>
 
-<div class="repair" id="repair">
-<h2>🔧 Speaker Repair Service</h2>
 
-<p>Bluetooth Repair – ₹299</p>
-<p>Home Theatre – ₹499</p>
-<p>DJ Speaker – ₹699</p>
+<div class="repair">
+
+<h2>Click For Speaker Repair</h2>
+
+<p>(Old Speaker Repair - Best Quality)</p>
+<p>(Old Speaker Modify - Best Quality)</p>
+<p><b>Your Trust Is Our Strength</b></p>
 
 <br>
 
-<p>Bass Boost Upgrade</p>
-<p>All Type Speaker Repair</p>
+<button onclick="contact()">Repair My Speaker</button>
 
-<button onclick="contact()">Contact On WhatsApp</button>
 </div>
 
 </div>
+
 
 <div id="cart" class="cart-page">
+
 <h2>Your Cart</h2>
+
 <div id="cartItems"></div>
-<h3>Total: ₹<span id="total">0</span></h3>
-<button class="checkout" onclick="checkout()">Proceed To Checkout</button>
+
+<h3>Total ₹<span id="total">0</span></h3>
+
+<button class="checkout" onclick="checkout()">Checkout</button>
+
 <br><br>
+
 <button onclick="backHome()">Back</button>
+
 </div>
 
+
+<div id="form" class="form">
+
+<h2>Delivery Details</h2>
+
+<input id="name" placeholder="Full Name">
+
+<input id="phone" placeholder="Phone Number">
+
+<input id="pincode" placeholder="Pincode">
+
+<textarea id="address" placeholder="Full Address"></textarea>
+
+<button class="checkout" onclick="sendOrder()">Place Order</button>
+
+</div>
+
+
 <footer>
+
 <p>Feel The Bass. Own The Power.</p>
+
 <p>Made In India 🇮🇳</p>
+
 </footer>
 
+
 <script>
+
 let cart=[];
 
 function addCart(name,price){
-cart.push({name:name,price:price});
+
+cart.push({name,price});
+
 document.getElementById("count").innerText=cart.length;
-alert("Added to Cart");
+
+alert("Added To Cart");
+
 }
+
 
 function showCart(){
+
 document.getElementById("home").style.display="none";
 document.getElementById("cart").style.display="block";
+
 renderCart();
+
 }
+
 
 function backHome(){
+
 document.getElementById("home").style.display="block";
 document.getElementById("cart").style.display="none";
+
 }
 
+
 function renderCart(){
+
 let html="";
 let total=0;
 
-cart.forEach((item,index)=>{
-total+=item.price;
+cart.forEach((item,i)=>{
+
 html+=`
+
 <div class="cart-item">
+
 ${item.name} - ₹${item.price}
-<button class="qty-btn" onclick="removeItem(${index})">Remove</button>
-</div>`;
+
+<button onclick="removeItem(${i})">Remove</button>
+
+</div>
+
+`;
+
+total+=item.price;
+
 });
 
 document.getElementById("cartItems").innerHTML=html;
 document.getElementById("total").innerText=total;
+
 }
+
 
 function removeItem(i){
+
 cart.splice(i,1);
+
 renderCart();
+
 document.getElementById("count").innerText=cart.length;
+
 }
+
 
 function checkout(){
-if(cart.length===0){
-alert("Cart is empty!");
-return;
+
+document.getElementById("cart").style.display="none";
+document.getElementById("form").style.display="block";
+
 }
 
-let name=prompt("Enter Your Name:");
-let address=prompt("Enter Your Full Address:");
-let pincode=prompt("Enter Pincode:");
 
-let msg="New Order:%0A";
-let total=0;
+function sendOrder(){
 
-cart.forEach(item=>{
-msg+=item.name+" - ₹"+item.price+"%0A";
-total+=item.price;
+let name=document.getElementById("name").value;
+let phone=document.getElementById("phone").value;
+let pin=document.getElementById("pincode").value;
+let address=document.getElementById("address").value;
+
+let msg="NEW ORDER %0A";
+
+cart.forEach(p=>{
+msg+=p.name+" - ₹"+p.price+"%0A";
 });
 
-msg+="%0ATotal: ₹"+total;
-msg+="%0A%0AName: "+name;
-msg+="%0AAddress: "+address;
-msg+="%0APincode: "+pincode;
+msg+="%0AName:"+name;
+msg+="%0APhone:"+phone;
+msg+="%0APincode:"+pin;
+msg+="%0AAddress:"+address;
 
-window.open("https://wa.me/919610651006?text="+msg,"_blank");
+window.open("https://wa.me/919610651006?text="+msg);
+
 }
+
 
 function contact(){
-window.open("https://wa.me/919610651006","_blank");
+
+window.open("https://wa.me/919610651006");
+
 }
 
-function scrollToRepair(){
-document.getElementById("repair").scrollIntoView({behavior:"smooth"});
-}
 </script>
 
 </body>
-  </html>
+  </html> 
