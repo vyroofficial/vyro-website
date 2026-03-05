@@ -4,7 +4,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>VYRO - Feel The Bass</title>
+<title>VYRO Official</title>
 
 <style>
 
@@ -15,30 +15,53 @@ background:#0f0f14;
 color:white;
 }
 
+/* HEADER */
+
 header{
 background:#111;
 padding:15px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-box-shadow:0 0 10px #8000ff;
+box-shadow:0 0 10px purple;
 }
 
 .logo{
 font-size:22px;
 font-weight:bold;
-color:#00ffcc;
+color:#00ffc3;
 cursor:pointer;
 }
 
 .cart-btn{
-background:#00ffcc;
+background:#00ffc3;
 color:black;
-padding:8px 15px;
 border:none;
+padding:8px 15px;
 border-radius:20px;
+cursor:pointer;
 font-weight:bold;
 }
+
+/* CATEGORY */
+
+.categories{
+display:flex;
+overflow-x:auto;
+background:#1a1a22;
+padding:10px;
+}
+
+.categories div{
+background:purple;
+padding:8px 15px;
+margin-right:10px;
+border-radius:20px;
+white-space:nowrap;
+cursor:pointer;
+}
+
+/* PRODUCTS */
 
 .products{
 display:flex;
@@ -50,11 +73,9 @@ padding:20px;
 .card{
 background:#1a1a22;
 width:220px;
-margin:15px;
+margin:10px;
 padding:15px;
 border-radius:10px;
-box-shadow:0 0 10px #8000ff55;
-text-align:center;
 }
 
 .card img{
@@ -62,22 +83,17 @@ width:100%;
 border-radius:8px;
 }
 
-.add-btn{
-background:#00ffcc;
+.add{
+background:#00ffc3;
 color:black;
 border:none;
 padding:8px;
 border-radius:20px;
-margin-top:8px;
 width:100%;
-font-weight:bold;
 cursor:pointer;
 }
 
-.sale{
-color:red;
-font-weight:bold;
-}
+/* CART */
 
 .cart-page{
 display:none;
@@ -92,31 +108,52 @@ border-radius:8px;
 }
 
 .checkout{
-background:#00ffcc;
+background:#00ffc3;
 color:black;
-padding:12px;
 border:none;
-border-radius:25px;
+padding:12px;
 width:100%;
+border-radius:25px;
 font-weight:bold;
+cursor:pointer;
 }
 
-.admin{
+/* FORM */
+
+.form{
 display:none;
 padding:20px;
+}
+
+input,textarea{
+width:100%;
+padding:10px;
+margin:8px 0;
+border-radius:6px;
+border:none;
+}
+
+/* REPAIR */
+
+.repair{
+text-align:center;
+padding:50px 20px;
 background:#111;
 }
 
-input{
-width:100%;
-padding:10px;
-margin:6px 0;
+.repair button{
+background:purple;
+color:white;
 border:none;
-border-radius:6px;
+padding:12px 25px;
+border-radius:25px;
+cursor:pointer;
 }
 
-button{
-cursor:pointer;
+footer{
+text-align:center;
+padding:20px;
+background:#111;
 }
 
 </style>
@@ -126,16 +163,86 @@ cursor:pointer;
 
 <header>
 
-<div class="logo" onclick="secretClick()">VYRO 🇮🇳</div>
+<div class="logo" onclick="ownerClick()">VYRO 🇮🇳</div>
 
-<button class="cart-btn" onclick="showCart()">Cart (<span id="count">0</span>)</button>
+<button class="cart-btn" onclick="showCart()">
+Cart (<span id="count">0</span>)
+</button>
 
 </header>
 
 
 <div id="home">
 
-<div class="products" id="productList"></div>
+<div class="categories">
+
+<div>Portable</div>
+<div>Bass</div>
+<div>Party</div>
+<div>Bluetooth</div>
+<div>Home Theatre</div>
+
+</div>
+
+
+<div class="products">
+
+<div class="card">
+
+<img src="https://images.unsplash.com/photo-1585386959984-a4155228e89d">
+
+<h3>Portable Speaker</h3>
+
+<p>₹300</p>
+
+<button class="add" onclick="addCart('Portable Speaker',300)">Add</button>
+
+</div>
+
+
+<div class="card">
+
+<img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1">
+
+<h3>Home Theatre</h3>
+
+<p>₹700</p>
+
+<button class="add" onclick="addCart('Home Theatre',700)">Add</button>
+
+</div>
+
+
+<div class="card">
+
+<img src="https://images.unsplash.com/photo-1518441902117-0f66e3e00f12">
+
+<h3>Bass Booster</h3>
+
+<p>₹500</p>
+
+<button class="add" onclick="addCart('Bass Booster',500)">Add</button>
+
+</div>
+
+</div>
+
+
+<div class="repair">
+
+<h2>Speaker Repair Service</h2>
+
+<p>Old Speaker Repair (Best Quality)</p>
+
+<p>Old Speaker Modify (Best Quality)</p>
+
+<p>Your Trust Is Our Power</p>
+
+<br>
+
+<button onclick="contact()">Repair My Speaker</button>
+
+</div>
 
 </div>
 
@@ -150,237 +257,186 @@ cursor:pointer;
 
 <button class="checkout" onclick="checkout()">Checkout</button>
 
+<br><br>
+
+<button onclick="backHome()">Back</button>
+
 </div>
 
 
-<div id="form" class="cart-page">
+<div id="form" class="form">
 
-<h2>Delivery Details</h2>
+<h2>Delivery Address</h2>
 
-<input id="name" placeholder="First Name">
+<input id="name" placeholder="Full Name">
 
-<input id="lastname" placeholder="Last Name">
-
-<input id="phone" placeholder="Phone Number">
-
-<input id="state" placeholder="State">
+<input id="phone" placeholder="Phone">
 
 <input id="pincode" placeholder="Pincode">
 
-<input id="address" placeholder="Full Address">
+<textarea id="address" placeholder="Full Address"></textarea>
 
 <button class="checkout" onclick="sendOrder()">Place Order</button>
 
 </div>
 
 
-<div id="admin" class="admin">
+<footer>
 
-<h2>Owner Admin Panel</h2>
+<p>Feel The Bass • VYRO</p>
 
-<input id="pname" placeholder="Product Name">
-
-<input id="pprice" placeholder="Price">
-
-<input id="pimg" placeholder="Image URL">
-
-<input id="psale" placeholder="Sale Tag (optional)">
-
-<button onclick="addProduct()">Add Product</button>
-
-</div>
+</footer>
 
 
 <script>
 
-let products=[
-{name:"Portable Speaker",price:300,img:"https://images.unsplash.com/photo-1585386959984-a4155228e89d",sale:""},
-{name:"Bass Booster",price:500,img:"https://images.unsplash.com/photo-1518441902117-0f66e3e00f12",sale:"SALE"},
-{name:"Home Theatre",price:700,img:"https://images.unsplash.com/photo-1608043152269-423dbba4e7e1",sale:""}
-]
+/* CART SYSTEM */
 
-let cart=[]
+let cart=[];
 
-function loadProducts(){
+function addCart(name,price){
 
-let html=""
+cart.push({name,price});
 
-products.forEach((p,i)=>{
+document.getElementById("count").innerText=cart.length;
 
-html+=`
-
-<div class="card">
-
-<img src="${p.img}">
-
-<h3>${p.name}</h3>
-
-<p>₹${p.price}</p>
-
-<p class="sale">${p.sale}</p>
-
-<button class="add-btn" onclick="addCart(${i})">Add To Cart</button>
-
-<button onclick="deleteProduct(${i})">Delete</button>
-
-</div>
-
-`
-
-})
-
-document.getElementById("productList").innerHTML=html
+alert("Added To Cart");
 
 }
-
-loadProducts()
-
-
-function addCart(i){
-
-cart.push(products[i])
-
-count.innerText=cart.length
-
-}
-
 
 function showCart(){
 
-home.style.display="none"
+home.style.display="none";
 
-cart.style.display="block"
+cart.style.display="block";
 
-renderCart()
+renderCart();
 
 }
 
+function backHome(){
+
+home.style.display="block";
+
+cart.style.display="none";
+
+}
 
 function renderCart(){
 
-let html=""
+let html="";
 
-let total=0
+let total=0;
 
-cart.forEach((p,i)=>{
+cart.forEach((item,i)=>{
 
 html+=`
 
 <div class="cart-item">
 
-<img src="${p.img}" width="60">
-
-${p.name} ₹${p.price}
+${item.name} - ₹${item.price}
 
 <button onclick="removeItem(${i})">Remove</button>
 
 </div>
 
-`
+`;
 
-total+=p.price
+total+=item.price;
 
-})
+});
 
-cartItems.innerHTML=html
+cartItems.innerHTML=html;
 
-total.innerText=total
+document.getElementById("total").innerText=total;
 
 }
-
 
 function removeItem(i){
 
-cart.splice(i,1)
+cart.splice(i,1);
 
-renderCart()
+renderCart();
 
-count.innerText=cart.length
+count.innerText=cart.length;
 
 }
 
+/* CHECKOUT */
 
 function checkout(){
 
-cart.style.display="none"
+cart.style.display="none";
 
-form.style.display="block"
+form.style.display="block";
 
 }
-
 
 function sendOrder(){
 
-let msg="NEW ORDER %0A"
+let name=name.value;
+
+let phone=phone.value;
+
+let pin=pincode.value;
+
+let addressText=address.value;
+
+let msg="NEW ORDER %0A";
 
 cart.forEach(p=>{
 
-msg+=p.name+" ₹"+p.price+"%0A"
+msg+=p.name+" ₹"+p.price+"%0A";
 
-})
+});
 
-msg+="%0AName:"+name.value
+msg+="%0AName:"+name;
 
-msg+="%0APhone:"+phone.value
+msg+="%0APhone:"+phone;
 
-msg+="%0AAddress:"+address.value
+msg+="%0APincode:"+pin;
 
-window.open("https://wa.me/919610651006?text="+msg)
+msg+="%0AAddress:"+addressText;
 
-}
-
-
-function addProduct(){
-
-let p={
-
-name:pname.value,
-
-price:pprice.value,
-
-img:pimg.value,
-
-sale:psale.value
+window.open("https://wa.me/919610651006?text="+msg);
 
 }
 
-products.push(p)
+/* REPAIR */
 
-loadProducts()
+function contact(){
 
-}
-
-
-function deleteProduct(i){
-
-products.splice(i,1)
-
-loadProducts()
+window.open("https://wa.me/919610651006");
 
 }
 
+/* OWNER LOGIN */
 
-let clickCount=0
+let clickCount=0;
 
-function secretClick(){
+function ownerClick(){
 
-clickCount++
+clickCount++;
 
-if(clickCount==5){
+if(clickCount==8){
 
-let pass=prompt("Enter Owner Password")
+let pass=prompt("Owner Password");
 
 if(pass=="vyro123"){
 
-admin.style.display="block"
+alert("Owner Login Success");
 
-}else{
-
-alert("Wrong Password")
+window.open("admin.html");
 
 }
 
-clickCount=0
+else{
+
+alert("Wrong Password");
+
+}
+
+clickCount=0;
 
 }
 
@@ -389,5 +445,4 @@ clickCount=0
 </script>
 
 </body>
-
   </html>
