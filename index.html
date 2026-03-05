@@ -53,7 +53,6 @@ margin-right:15px;
 padding:8px 15px;
 background:#8000ff;
 border-radius:20px;
-cursor:pointer;
 white-space:nowrap;
 }
 
@@ -114,11 +113,23 @@ display:none;
 padding:20px;
 }
 
-.cart-item{
-background:#1a1a22;
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
 padding:10px;
-margin:10px 0;
-border-radius:8px;
+border-bottom:1px solid #333;
+text-align:center;
+}
+
+.qty-btn{
+padding:5px 10px;
+border:none;
+background:#8000ff;
+color:white;
+cursor:pointer;
 }
 
 .checkout{
@@ -130,6 +141,7 @@ border-radius:25px;
 cursor:pointer;
 width:100%;
 font-weight:bold;
+margin-top:20px;
 }
 
 .form{
@@ -137,12 +149,12 @@ display:none;
 padding:20px;
 }
 
-input,textarea{
+input{
 width:100%;
 padding:10px;
 margin:8px 0;
-border-radius:6px;
 border:none;
+border-radius:6px;
 }
 
 footer{
@@ -158,15 +170,20 @@ margin-top:30px;
 <body>
 
 <header>
+
 <div class="logo">VYRO 🇮🇳</div>
-<button class="cart-btn" onclick="showCart()">Cart (<span id="count">0</span>)</button>
+
+<button class="cart-btn" onclick="showCart()">
+Cart (<span id="count">0</span>)
+</button>
+
 </header>
 
 
 <div class="categories">
 
-<div>Portable Speaker</div>
-<div>Bluetooth Speaker</div>
+<div>Portable</div>
+<div>Bluetooth</div>
 <div>Home Theatre</div>
 <div>Bass Booster</div>
 <div>Party Box</div>
@@ -178,41 +195,45 @@ margin-top:30px;
 
 <div class="products">
 
-
 <div class="card">
 <img src="https://images.unsplash.com/photo-1585386959984-a4155228e89d">
 <h3>Portable Speaker</h3>
-<p>Price ₹300</p>
-<button class="add-btn" onclick="addCart('Portable Speaker',300)">Add To Cart</button>
+<p>₹300</p>
+<button class="add-btn" onclick="addCart('Portable Speaker',300,this)">
+Add To Cart
+</button>
 </div>
 
 
 <div class="card">
 <img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1">
 <h3>Home Theatre</h3>
-<p>Price ₹700</p>
-<button class="add-btn" onclick="addCart('Home Theatre',700)">Add To Cart</button>
+<p>₹700</p>
+<button class="add-btn" onclick="addCart('Home Theatre',700,this)">
+Add To Cart
+</button>
 </div>
 
 
 <div class="card">
 <img src="https://images.unsplash.com/photo-1518441902117-0f66e3e00f12">
-<h3>Bass Booster Speaker</h3>
-<p>Price ₹500</p>
-<button class="add-btn" onclick="addCart('Bass Booster Speaker',500)">Add To Cart</button>
+<h3>Bass Booster</h3>
+<p>₹500</p>
+<button class="add-btn" onclick="addCart('Bass Booster',500,this)">
+Add To Cart
+</button>
 </div>
-
 
 </div>
 
 
 <div class="repair">
 
-<h2>Click For Speaker Repair</h2>
+<h2>Upgrade Your Speaker</h2>
 
-<p>(Old Speaker Repair - Best Quality)</p>
-<p>(Old Speaker Modify - Best Quality)</p>
-<p><b>Your Trust Is Our Strength</b></p>
+<p>Old Speaker Repair (Best Quality)</p>
+<p>Old Speaker Modify (Best Quality)</p>
+<p>आपका भरोसा ही हमारी जान है</p>
 
 <br>
 
@@ -223,11 +244,23 @@ margin-top:30px;
 </div>
 
 
+
 <div id="cart" class="cart-page">
 
 <h2>Your Cart</h2>
 
-<div id="cartItems"></div>
+<table>
+
+<tr>
+<th>Image</th>
+<th>Item</th>
+<th>Price</th>
+<th>Quantity</th>
+</tr>
+
+<tbody id="cartItems"></tbody>
+
+</table>
 
 <h3>Total ₹<span id="total">0</span></h3>
 
@@ -240,41 +273,57 @@ margin-top:30px;
 </div>
 
 
+
 <div id="form" class="form">
 
 <h2>Delivery Details</h2>
 
-<input id="name" placeholder="Full Name">
-
+<input id="fname" placeholder="First Name">
+<input id="lname" placeholder="Last Name">
+<input id="address" placeholder="Address">
+<input id="apartment" placeholder="Apartment">
+<input id="state" placeholder="State">
+<input id="pin" placeholder="Pincode">
 <input id="phone" placeholder="Phone Number">
 
-<input id="pincode" placeholder="Pincode">
-
-<textarea id="address" placeholder="Full Address"></textarea>
-
-<button class="checkout" onclick="sendOrder()">Place Order</button>
+<button class="checkout" onclick="sendOrder()">
+Place Order
+</button>
 
 </div>
+
 
 
 <footer>
 
 <p>Feel The Bass. Own The Power.</p>
-
 <p>Made In India 🇮🇳</p>
 
 </footer>
+
 
 
 <script>
 
 let cart=[];
 
-function addCart(name,price){
+function addCart(name,price,btn){
 
-cart.push({name,price});
+let img=btn.parentElement.querySelector("img").src;
 
-document.getElementById("count").innerText=cart.length;
+let item=cart.find(p=>p.name===name);
+
+if(item){
+
+item.qty++;
+
+}else{
+
+cart.push({name,price,img,qty:1});
+
+}
+
+count.innerText=cart.length;
 
 alert("Added To Cart");
 
@@ -283,8 +332,8 @@ alert("Added To Cart");
 
 function showCart(){
 
-document.getElementById("home").style.display="none";
-document.getElementById("cart").style.display="block";
+home.style.display="none";
+cart.style.display="block";
 
 renderCart();
 
@@ -293,8 +342,8 @@ renderCart();
 
 function backHome(){
 
-document.getElementById("home").style.display="block";
-document.getElementById("cart").style.display="none";
+home.style.display="block";
+cart.style.display="none";
 
 }
 
@@ -308,62 +357,83 @@ cart.forEach((item,i)=>{
 
 html+=`
 
-<div class="cart-item">
+<tr>
 
-${item.name} - ₹${item.price}
+<td><img src="${item.img}" width="60"></td>
 
-<button onclick="removeItem(${i})">Remove</button>
+<td>${item.name}</td>
 
-</div>
+<td>₹${item.price}</td>
+
+<td>
+
+<button class="qty-btn" onclick="changeQty(${i},-1)">-</button>
+
+${item.qty}
+
+<button class="qty-btn" onclick="changeQty(${i},1)">+</button>
+
+</td>
+
+</tr>
 
 `;
 
-total+=item.price;
+total+=item.price*item.qty;
 
 });
 
 document.getElementById("cartItems").innerHTML=html;
+
 document.getElementById("total").innerText=total;
 
 }
 
 
-function removeItem(i){
+function changeQty(i,val){
+
+cart[i].qty+=val;
+
+if(cart[i].qty<=0){
 
 cart.splice(i,1);
 
+}
+
 renderCart();
 
-document.getElementById("count").innerText=cart.length;
+count.innerText=cart.length;
 
 }
 
 
 function checkout(){
 
-document.getElementById("cart").style.display="none";
-document.getElementById("form").style.display="block";
+cart.style.display="none";
+form.style.display="block";
 
 }
 
 
 function sendOrder(){
 
-let name=document.getElementById("name").value;
-let phone=document.getElementById("phone").value;
-let pin=document.getElementById("pincode").value;
-let address=document.getElementById("address").value;
-
 let msg="NEW ORDER %0A";
 
 cart.forEach(p=>{
-msg+=p.name+" - ₹"+p.price+"%0A";
+
+msg+=p.name+" x"+p.qty+" - ₹"+(p.price*p.qty)+"%0A";
+
 });
 
-msg+="%0AName:"+name;
-msg+="%0APhone:"+phone;
-msg+="%0APincode:"+pin;
-msg+="%0AAddress:"+address;
+msg+="%0AName: "+fname.value+" "+lname.value;
+
+msg+="%0APhone: "+phone.value;
+
+msg+="%0AAddress: "+address.value+" "+apartment.value;
+
+msg+="%0AState: "+state.value;
+
+msg+="%0APincode: "+pin.value;
 
 window.open("https://wa.me/919610651006?text="+msg);
 
