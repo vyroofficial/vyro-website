@@ -3,7 +3,7 @@
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VYRO Store</title>
+<title>VYRO Official</title>
 
 <style>
 
@@ -16,252 +16,159 @@ color:white;
 
 header{
 background:#111;
-padding:12px;
+padding:15px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-position:sticky;
-top:0;
-z-index:1000;
+box-shadow:0 0 10px #8000ff;
 }
 
 .logo{
 font-size:24px;
-font-weight:bold;
 color:#00ffcc;
+font-weight:bold;
 }
 
-.search{
-width:40%;
-padding:6px;
-border:none;
-border-radius:5px;
-}
-
-.cart-btn{
-font-size:22px;
+.menu{
 cursor:pointer;
+font-size:22px;
 }
 
-.slider img{
-width:100%;
-height:200px;
-object-fit:cover;
+.sidebar{
+position:fixed;
+left:-250px;
+top:0;
+width:250px;
+height:100%;
+background:#111;
+padding:20px;
+transition:0.3s;
+}
+
+.sidebar a{
+display:block;
+color:white;
+padding:10px;
+text-decoration:none;
 }
 
 .categories{
 display:flex;
 overflow-x:auto;
-padding:10px;
 background:#1a1a22;
-}
-
-.cat{
-margin-right:15px;
-text-align:center;
-}
-
-.cat img{
-width:60px;
-background:#222;
 padding:10px;
-border-radius:50%;
+}
+
+.categories div{
+margin-right:10px;
+background:#8000ff;
+padding:8px 15px;
+border-radius:20px;
+cursor:pointer;
 }
 
 .products{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:10px;
-padding:10px;
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+padding:20px;
 }
 
 .card{
 background:#1a1a22;
-padding:10px;
+width:220px;
+margin:15px;
+padding:15px;
 border-radius:10px;
-transition:0.3s;
-}
-
-.card:hover{
-transform:scale(1.05);
+box-shadow:0 0 10px #8000ff55;
 }
 
 .card img{
 width:100%;
-border-radius:10px;
+border-radius:8px;
 }
 
-.price{
-color:#00ffcc;
-font-weight:bold;
-}
-
-.add{
+.btn{
 background:#00ffcc;
-color:black;
 border:none;
-padding:8px;
-border-radius:20px;
+padding:10px;
 width:100%;
+border-radius:20px;
+margin-top:8px;
 font-weight:bold;
-margin-top:5px;
+cursor:pointer;
 }
 
 .repair{
 background:#111;
-padding:40px 15px;
 text-align:center;
+padding:60px 20px;
 }
 
 .repair h2{
 color:#00ffcc;
 }
 
-.repair button{
-background:#8000ff;
-color:white;
-padding:12px 25px;
-border:none;
-border-radius:25px;
-}
-
-.cartpage{
+.cart{
 display:none;
-padding:15px;
-}
-
-.cartitem{
-background:#1a1a22;
-padding:10px;
-margin:8px 0;
-border-radius:8px;
-}
-
-.checkout{
-background:#00ffcc;
-color:black;
-padding:12px;
-border:none;
-border-radius:20px;
-width:100%;
-font-weight:bold;
-margin-top:10px;
-}
-
-.form{
-display:none;
-padding:15px;
+padding:20px;
 }
 
 input,textarea{
 width:100%;
 padding:10px;
-margin:8px 0;
+margin:5px 0;
 border:none;
-border-radius:6px;
+border-radius:5px;
 }
 
 footer{
+background:#111;
 text-align:center;
-background:#111;
 padding:20px;
-margin-top:20px;
-}
-
-.bottom{
-position:fixed;
-bottom:0;
-width:100%;
-background:#111;
-display:flex;
-justify-content:space-around;
-padding:10px;
-font-size:22px;
 }
 
 </style>
-
 </head>
 
 <body>
 
 <header>
 
-<div class="logo">VYRO</div>
+<div class="menu" onclick="openMenu()">☰</div>
 
-<input class="search" placeholder="Search Speaker">
-
-<div class="cart-btn" onclick="showCart()">🛒 <span id="count">0</span></div>
+<div class="logo">VYRO 🇮🇳</div>
 
 </header>
 
 
-<div id="home">
+<div class="sidebar" id="menu">
 
-<div class="slider">
-<img src="https://images.unsplash.com/photo-1585386959984-a4155228e89d">
+<a href="#">Home</a>
+<a href="#">Speakers</a>
+<a href="#">Repair Service</a>
+<a href="#" onclick="admin()">Owner Login</a>
+
 </div>
 
 
 <div class="categories">
 
-<div class="cat">
-<img src="https://cdn-icons-png.flaticon.com/512/727/727245.png">
-<p>Speaker</p>
-</div>
-
-<div class="cat">
-<img src="https://cdn-icons-png.flaticon.com/512/1048/1048953.png">
-<p>Headphone</p>
-</div>
-
-<div class="cat">
-<img src="https://cdn-icons-png.flaticon.com/512/888/888879.png">
-<p>Watch</p>
-</div>
+<div>Bluetooth</div>
+<div>Portable</div>
+<div>Home Theatre</div>
+<div>Bass Booster</div>
+<div>Party Box</div>
 
 </div>
 
 
-<div class="products">
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1">
-<h3>Portable Speaker</h3>
-<p class="price">₹300</p>
-<button class="add" onclick="addCart('Portable Speaker',300)">Add</button>
-</div>
-
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1518441902117-0f66e3e00f12">
-<h3>Bass Booster</h3>
-<p class="price">₹500</p>
-<button class="add" onclick="addCart('Bass Booster',500)">Add</button>
-</div>
-
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1519677100203-a0e668c92439">
-<h3>Party Speaker</h3>
-<p class="price">₹900</p>
-<button class="add" onclick="addCart('Party Speaker',900)">Add</button>
-</div>
-
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1580894894513-541e068a3e2b">
-<h3>Bluetooth Speaker</h3>
-<p class="price">₹400</p>
-<button class="add" onclick="addCart('Bluetooth Speaker',400)">Add</button>
-</div>
-
-</div>
+<div class="products" id="products"></div>
 
 
 <div class="repair">
 
-<h2>Upgrade Your Speaker</h2>
+<h2>Repair & Modify Service</h2>
 
 <p>Old Speaker Repair (Best Quality)</p>
 
@@ -269,33 +176,27 @@ font-size:22px;
 
 <p>Your Trust Is Our Power</p>
 
-<button onclick="contact()">Repair My Speaker</button>
-
-</div>
-
-</div>
-
-
-<div id="cart" class="cartpage">
-
-<h2>Your Cart</h2>
-
-<div id="items"></div>
-
-<h3>Total ₹ <span id="total">0</span></h3>
-
-<button class="checkout" onclick="checkout()">Checkout</button>
-
-<br><br>
-
-<button onclick="backHome()">Back</button>
+<button class="btn" onclick="contact()">Repair My Speaker</button>
 
 </div>
 
 
-<div id="form" class="form">
+<div class="cart" id="cart">
 
-<h2>Delivery Address</h2>
+<h2>Selected Items</h2>
+
+<div id="cartItems"></div>
+
+<h3>Total ₹<span id="total">0</span></h3>
+
+<button class="btn" onclick="checkout()">Checkout</button>
+
+</div>
+
+
+<div id="form" style="display:none;padding:20px">
+
+<h2>Delivery Details</h2>
 
 <input id="name" placeholder="First Name">
 
@@ -307,111 +208,102 @@ font-size:22px;
 
 <textarea id="address" placeholder="Full Address"></textarea>
 
-<button class="checkout" onclick="sendOrder()">Place Order</button>
+<button class="btn" onclick="sendOrder()">Place Order</button>
 
 </div>
 
 
 <footer>
 
-<p>Feel The Bass. Own The Power.</p>
+<p>Feel The Bass • Own The Power</p>
 
 <p>Made In India 🇮🇳</p>
 
 </footer>
 
 
-<div class="bottom">
-
-<span onclick="backHome()">🏠</span>
-
-<span onclick="showCart()">🛒</span>
-
-<span onclick="contact()">💬</span>
-
-</div>
-
-
 <script>
+
+let products=[
+{
+name:"Portable Speaker",
+price:300,
+img:"https://images.unsplash.com/photo-1585386959984-a4155228e89d"
+},
+{
+name:"Home Theatre",
+price:700,
+img:"https://images.unsplash.com/photo-1608043152269-423dbba4e7e1"
+},
+{
+name:"Bass Booster",
+price:500,
+img:"https://images.unsplash.com/photo-1518441902117-0f66e3e00f12"
+}
+];
 
 let cart=[];
 
-function addCart(name,price){
-
-cart.push({name,price,qty:1});
-
-count.innerText=cart.length;
-
-alert("Added To Cart");
-
-}
-
-function showCart(){
-
-home.style.display="none";
-
-document.getElementById("cart").style.display="block";
-
-renderCart();
-
-}
-
-function backHome(){
-
-home.style.display="block";
-
-cart.style.display="none";
-
-form.style.display="none";
-
-}
-
-function renderCart(){
+function loadProducts(){
 
 let html="";
 
-let total=0;
-
-cart.forEach((item,i)=>{
+products.forEach((p,i)=>{
 
 html+=`
-<div class="cartitem">
-${item.name} ₹${item.price}
-<button onclick="removeItem(${i})">Remove</button>
-</div>
-`;
 
-total+=item.price;
+<div class="card">
+
+<img src="${p.img}">
+
+<h3>${p.name}</h3>
+
+<p>₹${p.price}</p>
+
+<button class="btn" onclick="addCart(${i})">Add To Cart</button>
+
+</div>
+
+`;
 
 });
 
-items.innerHTML=html;
-
-document.getElementById("total").innerText=total;
+document.getElementById("products").innerHTML=html;
 
 }
 
-function removeItem(i){
+loadProducts();
 
-cart.splice(i,1);
 
-renderCart();
+function addCart(i){
 
-count.innerText=cart.length;
+cart.push(products[i]);
+
+alert("Added");
 
 }
+
 
 function checkout(){
 
-cart.style.display="none";
-
-form.style.display="block";
+document.getElementById("form").style.display="block";
 
 }
 
+
 function sendOrder(){
 
-let msg="NEW ORDER %0A";
+let name=name.value;
+
+let lname=lname.value;
+
+let phone=phone.value;
+
+let pin=pin.value;
+
+let address=address.value;
+
+let msg="New Order %0A";
 
 cart.forEach(p=>{
 
@@ -419,17 +311,18 @@ msg+=p.name+" ₹"+p.price+"%0A";
 
 });
 
-msg+="%0AName:"+name.value+" "+lname.value;
+msg+="Name:"+name+" "+lname;
 
-msg+="%0APhone:"+phone.value;
+msg+="%0APhone:"+phone;
 
-msg+="%0APincode:"+pin.value;
+msg+="%0APincode:"+pin;
 
-msg+="%0AAddress:"+address.value;
+msg+="%0AAddress:"+address;
 
 window.open("https://wa.me/919610651006?text="+msg);
 
 }
+
 
 function contact(){
 
@@ -437,7 +330,37 @@ window.open("https://wa.me/919610651006");
 
 }
 
+
+function openMenu(){
+
+let m=document.getElementById("menu");
+
+if(m.style.left=="0px")
+
+m.style.left="-250px";
+
+else
+
+m.style.left="0px";
+
+}
+
+
+function admin(){
+
+let pass=prompt("Owner Password");
+
+if(pass=="vyro123")
+
+alert("Admin Panel Coming Soon");
+
+else
+
+alert("Wrong Password");
+
+}
+
 </script>
 
 </body>
-                                               </html>
+  </html>
