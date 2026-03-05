@@ -3,8 +3,7 @@
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>VYRO - Feel The Bass</title>
+<title>VYRO Store</title>
 
 <style>
 
@@ -17,13 +16,13 @@ color:white;
 
 header{
 background:#111;
-padding:15px;
+padding:12px;
 display:flex;
 justify-content:space-between;
 align-items:center;
 position:sticky;
 top:0;
-box-shadow:0 0 10px #8000ff;
+z-index:1000;
 }
 
 .logo{
@@ -32,53 +31,85 @@ font-weight:bold;
 color:#00ffcc;
 }
 
-.cart-btn{
-background:#00ffcc;
-color:black;
-padding:8px 15px;
+.search{
+width:40%;
+padding:6px;
 border:none;
-border-radius:20px;
+border-radius:5px;
+}
+
+.cart-btn{
+font-size:22px;
 cursor:pointer;
-font-weight:bold;
+}
+
+.slider img{
+width:100%;
+height:200px;
+object-fit:cover;
+}
+
+.categories{
+display:flex;
+overflow-x:auto;
+padding:10px;
+background:#1a1a22;
+}
+
+.cat{
+margin-right:15px;
+text-align:center;
+}
+
+.cat img{
+width:60px;
+background:#222;
+padding:10px;
+border-radius:50%;
 }
 
 .products{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-padding:20px;
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+padding:10px;
 }
 
 .card{
 background:#1a1a22;
-width:220px;
-margin:15px;
-padding:15px;
+padding:10px;
 border-radius:10px;
-box-shadow:0 0 10px #8000ff55;
-text-align:center;
+transition:0.3s;
+}
+
+.card:hover{
+transform:scale(1.05);
 }
 
 .card img{
 width:100%;
-border-radius:8px;
+border-radius:10px;
 }
 
-.add-btn{
+.price{
+color:#00ffcc;
+font-weight:bold;
+}
+
+.add{
 background:#00ffcc;
 color:black;
-padding:8px;
 border:none;
+padding:8px;
 border-radius:20px;
-cursor:pointer;
-margin-top:8px;
 width:100%;
 font-weight:bold;
+margin-top:5px;
 }
 
 .repair{
 background:#111;
-padding:50px 20px;
+padding:40px 15px;
 text-align:center;
 }
 
@@ -92,23 +123,18 @@ color:white;
 padding:12px 25px;
 border:none;
 border-radius:25px;
-cursor:pointer;
 }
 
-.cart-page{
+.cartpage{
 display:none;
-padding:20px;
+padding:15px;
 }
 
-table{
-width:100%;
-border-collapse:collapse;
-}
-
-th,td{
-border:1px solid #444;
+.cartitem{
+background:#1a1a22;
 padding:10px;
-text-align:center;
+margin:8px 0;
+border-radius:8px;
 }
 
 .checkout{
@@ -116,16 +142,15 @@ background:#00ffcc;
 color:black;
 padding:12px;
 border:none;
-border-radius:25px;
-cursor:pointer;
+border-radius:20px;
 width:100%;
-margin-top:20px;
 font-weight:bold;
+margin-top:10px;
 }
 
 .form{
 display:none;
-padding:20px;
+padding:15px;
 }
 
 input,textarea{
@@ -137,77 +162,98 @@ border-radius:6px;
 }
 
 footer{
-background:#111;
 text-align:center;
+background:#111;
 padding:20px;
-margin-top:30px;
+margin-top:20px;
+}
+
+.bottom{
+position:fixed;
+bottom:0;
+width:100%;
+background:#111;
+display:flex;
+justify-content:space-around;
+padding:10px;
+font-size:22px;
 }
 
 </style>
+
 </head>
 
 <body>
 
 <header>
 
-<div class="logo">VYRO 🇮🇳</div>
+<div class="logo">VYRO</div>
 
-<button class="cart-btn" onclick="showCart()">
-Cart (<span id="count">0</span>)
-</button>
+<input class="search" placeholder="Search Speaker">
+
+<div class="cart-btn" onclick="showCart()">🛒 <span id="count">0</span></div>
 
 </header>
 
 
 <div id="home">
 
+<div class="slider">
+<img src="https://images.unsplash.com/photo-1585386959984-a4155228e89d">
+</div>
+
+
+<div class="categories">
+
+<div class="cat">
+<img src="https://cdn-icons-png.flaticon.com/512/727/727245.png">
+<p>Speaker</p>
+</div>
+
+<div class="cat">
+<img src="https://cdn-icons-png.flaticon.com/512/1048/1048953.png">
+<p>Headphone</p>
+</div>
+
+<div class="cat">
+<img src="https://cdn-icons-png.flaticon.com/512/888/888879.png">
+<p>Watch</p>
+</div>
+
+</div>
+
+
 <div class="products">
 
 <div class="card">
-
-<img src="https://images.unsplash.com/photo-1585386959984-a4155228e89d">
-
-<h3>Portable Speaker</h3>
-
-<p>₹300</p>
-
-<button class="add-btn"
-onclick="addCart('Portable Speaker',300,'https://images.unsplash.com/photo-1585386959984-a4155228e89d')">
-Add To Cart
-</button>
-
-</div>
-
-
-<div class="card">
-
 <img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1">
-
-<h3>Home Theatre</h3>
-
-<p>₹700</p>
-
-<button class="add-btn"
-onclick="addCart('Home Theatre',700,'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1')">
-Add To Cart
-</button>
-
+<h3>Portable Speaker</h3>
+<p class="price">₹300</p>
+<button class="add" onclick="addCart('Portable Speaker',300)">Add</button>
 </div>
 
 
 <div class="card">
-
 <img src="https://images.unsplash.com/photo-1518441902117-0f66e3e00f12">
+<h3>Bass Booster</h3>
+<p class="price">₹500</p>
+<button class="add" onclick="addCart('Bass Booster',500)">Add</button>
+</div>
 
-<h3>Bass Booster Speaker</h3>
 
-<p>₹500</p>
+<div class="card">
+<img src="https://images.unsplash.com/photo-1519677100203-a0e668c92439">
+<h3>Party Speaker</h3>
+<p class="price">₹900</p>
+<button class="add" onclick="addCart('Party Speaker',900)">Add</button>
+</div>
 
-<button class="add-btn"
-onclick="addCart('Bass Booster Speaker',500,'https://images.unsplash.com/photo-1518441902117-0f66e3e00f12')">
-Add To Cart
-</button>
 
+<div class="card">
+<img src="https://images.unsplash.com/photo-1580894894513-541e068a3e2b">
+<h3>Bluetooth Speaker</h3>
+<p class="price">₹400</p>
+<button class="add" onclick="addCart('Bluetooth Speaker',400)">Add</button>
 </div>
 
 </div>
@@ -215,15 +261,13 @@ Add To Cart
 
 <div class="repair">
 
-<h2>Speaker Repair & Modify Service</h2>
+<h2>Upgrade Your Speaker</h2>
 
 <p>Old Speaker Repair (Best Quality)</p>
 
 <p>Old Speaker Modify (Best Quality)</p>
 
 <p>Your Trust Is Our Power</p>
-
-<br>
 
 <button onclick="contact()">Repair My Speaker</button>
 
@@ -232,36 +276,15 @@ Add To Cart
 </div>
 
 
-
-<div id="cartPage" class="cart-page">
+<div id="cart" class="cartpage">
 
 <h2>Your Cart</h2>
 
-<table>
+<div id="items"></div>
 
-<tr>
+<h3>Total ₹ <span id="total">0</span></h3>
 
-<th>Image</th>
-
-<th>Item</th>
-
-<th>Price</th>
-
-<th>Remove</th>
-
-</tr>
-
-<tbody id="cartItems"></tbody>
-
-</table>
-
-<h3>Total ₹<span id="total">0</span></h3>
-
-<button class="checkout" onclick="checkout()">
-
-Checkout
-
-</button>
+<button class="checkout" onclick="checkout()">Checkout</button>
 
 <br><br>
 
@@ -270,24 +293,21 @@ Checkout
 </div>
 
 
-
 <div id="form" class="form">
 
 <h2>Delivery Address</h2>
 
-<input id="name" placeholder="Full Name">
+<input id="name" placeholder="First Name">
+
+<input id="lname" placeholder="Last Name">
 
 <input id="phone" placeholder="Phone Number">
 
-<input id="pincode" placeholder="Pincode">
+<input id="pin" placeholder="Pincode">
 
 <textarea id="address" placeholder="Full Address"></textarea>
 
-<button class="checkout" onclick="sendOrder()">
-
-Place Order
-
-</button>
+<button class="checkout" onclick="sendOrder()">Place Order</button>
 
 </div>
 
@@ -301,41 +321,50 @@ Place Order
 </footer>
 
 
+<div class="bottom">
+
+<span onclick="backHome()">🏠</span>
+
+<span onclick="showCart()">🛒</span>
+
+<span onclick="contact()">💬</span>
+
+</div>
+
 
 <script>
 
 let cart=[];
 
-function addCart(name,price,img){
+function addCart(name,price){
 
-cart.push({name,price,img});
+cart.push({name,price,qty:1});
 
-document.getElementById("count").innerText=cart.length;
+count.innerText=cart.length;
 
 alert("Added To Cart");
 
 }
 
-
 function showCart(){
 
 home.style.display="none";
 
-cartPage.style.display="block";
+document.getElementById("cart").style.display="block";
 
 renderCart();
 
 }
 
-
 function backHome(){
 
 home.style.display="block";
 
-cartPage.style.display="none";
+cart.style.display="none";
+
+form.style.display="none";
 
 }
-
 
 function renderCart(){
 
@@ -346,31 +375,21 @@ let total=0;
 cart.forEach((item,i)=>{
 
 html+=`
-
-<tr>
-
-<td><img src="${item.img}" width="60"></td>
-
-<td>${item.name}</td>
-
-<td>₹${item.price}</td>
-
-<td><button onclick="removeItem(${i})">Remove</button></td>
-
-</tr>
-
+<div class="cartitem">
+${item.name} ₹${item.price}
+<button onclick="removeItem(${i})">Remove</button>
+</div>
 `;
 
 total+=item.price;
 
 });
 
-document.getElementById("cartItems").innerHTML=html;
+items.innerHTML=html;
 
 document.getElementById("total").innerText=total;
 
 }
-
 
 function removeItem(i){
 
@@ -382,46 +401,35 @@ count.innerText=cart.length;
 
 }
 
-
 function checkout(){
 
-cartPage.style.display="none";
+cart.style.display="none";
 
 form.style.display="block";
 
 }
 
-
 function sendOrder(){
-
-let name=document.getElementById("name").value;
-
-let phone=document.getElementById("phone").value;
-
-let pin=document.getElementById("pincode").value;
-
-let address=document.getElementById("address").value;
 
 let msg="NEW ORDER %0A";
 
 cart.forEach(p=>{
 
-msg+=p.name+" - ₹"+p.price+"%0A";
+msg+=p.name+" ₹"+p.price+"%0A";
 
 });
 
-msg+="%0AName:"+name;
+msg+="%0AName:"+name.value+" "+lname.value;
 
-msg+="%0APhone:"+phone;
+msg+="%0APhone:"+phone.value;
 
-msg+="%0APincode:"+pin;
+msg+="%0APincode:"+pin.value;
 
-msg+="%0AAddress:"+address;
+msg+="%0AAddress:"+address.value;
 
 window.open("https://wa.me/919610651006?text="+msg);
 
 }
-
 
 function contact(){
 
@@ -432,4 +440,4 @@ window.open("https://wa.me/919610651006");
 </script>
 
 </body>
-  </html>
+                                               </html>
