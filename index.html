@@ -3,6 +3,7 @@
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>VYRO - Feel The Bass</title>
 
 <style>
@@ -20,6 +21,8 @@ padding:15px;
 display:flex;
 justify-content:space-between;
 align-items:center;
+position:sticky;
+top:0;
 box-shadow:0 0 10px #8000ff;
 }
 
@@ -39,21 +42,6 @@ cursor:pointer;
 font-weight:bold;
 }
 
-.categories{
-display:flex;
-overflow-x:auto;
-background:#1a1a22;
-padding:10px;
-}
-
-.categories div{
-margin-right:15px;
-padding:8px 15px;
-background:#8000ff;
-border-radius:20px;
-white-space:nowrap;
-}
-
 .products{
 display:flex;
 flex-wrap:wrap;
@@ -68,6 +56,7 @@ margin:15px;
 padding:15px;
 border-radius:10px;
 box-shadow:0 0 10px #8000ff55;
+text-align:center;
 }
 
 .card img{
@@ -89,7 +78,7 @@ font-weight:bold;
 
 .repair{
 background:#111;
-padding:60px 20px;
+padding:50px 20px;
 text-align:center;
 }
 
@@ -111,11 +100,15 @@ display:none;
 padding:20px;
 }
 
-.cart-item{
-background:#1a1a22;
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+border:1px solid #444;
 padding:10px;
-margin:10px 0;
-border-radius:8px;
+text-align:center;
 }
 
 .checkout{
@@ -126,6 +119,7 @@ border:none;
 border-radius:25px;
 cursor:pointer;
 width:100%;
+margin-top:20px;
 font-weight:bold;
 }
 
@@ -138,8 +132,8 @@ input,textarea{
 width:100%;
 padding:10px;
 margin:8px 0;
-border-radius:6px;
 border:none;
+border-radius:6px;
 }
 
 footer{
@@ -165,40 +159,55 @@ Cart (<span id="count">0</span>)
 </header>
 
 
-<div class="categories">
-
-<div>Portable Speaker</div>
-<div>Bluetooth Speaker</div>
-<div>Home Theatre</div>
-<div>Bass Booster</div>
-<div>Party Box</div>
-
-</div>
-
-
 <div id="home">
 
 <div class="products">
 
 <div class="card">
+
 <img src="https://images.unsplash.com/photo-1585386959984-a4155228e89d">
+
 <h3>Portable Speaker</h3>
-<p>Price ₹300</p>
-<button class="add-btn" onclick="addCart('Portable Speaker',300)">Add To Cart</button>
+
+<p>₹300</p>
+
+<button class="add-btn"
+onclick="addCart('Portable Speaker',300,'https://images.unsplash.com/photo-1585386959984-a4155228e89d')">
+Add To Cart
+</button>
+
 </div>
 
+
 <div class="card">
+
 <img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1">
+
 <h3>Home Theatre</h3>
-<p>Price ₹700</p>
-<button class="add-btn" onclick="addCart('Home Theatre',700)">Add To Cart</button>
+
+<p>₹700</p>
+
+<button class="add-btn"
+onclick="addCart('Home Theatre',700,'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1')">
+Add To Cart
+</button>
+
 </div>
 
+
 <div class="card">
+
 <img src="https://images.unsplash.com/photo-1518441902117-0f66e3e00f12">
+
 <h3>Bass Booster Speaker</h3>
-<p>Price ₹500</p>
-<button class="add-btn" onclick="addCart('Bass Booster Speaker',500)">Add To Cart</button>
+
+<p>₹500</p>
+
+<button class="add-btn"
+onclick="addCart('Bass Booster Speaker',500,'https://images.unsplash.com/photo-1518441902117-0f66e3e00f12')">
+Add To Cart
+</button>
+
 </div>
 
 </div>
@@ -206,11 +215,13 @@ Cart (<span id="count">0</span>)
 
 <div class="repair">
 
-<h2>Repair / Modify Service</h2>
+<h2>Speaker Repair & Modify Service</h2>
 
 <p>Old Speaker Repair (Best Quality)</p>
+
 <p>Old Speaker Modify (Best Quality)</p>
-<p>आपका भरोसा ही हमारी ताकत है</p>
+
+<p>Your Trust Is Our Power</p>
 
 <br>
 
@@ -221,15 +232,36 @@ Cart (<span id="count">0</span>)
 </div>
 
 
+
 <div id="cartPage" class="cart-page">
 
 <h2>Your Cart</h2>
 
-<div id="cartItems"></div>
+<table>
+
+<tr>
+
+<th>Image</th>
+
+<th>Item</th>
+
+<th>Price</th>
+
+<th>Remove</th>
+
+</tr>
+
+<tbody id="cartItems"></tbody>
+
+</table>
 
 <h3>Total ₹<span id="total">0</span></h3>
 
-<button class="checkout" onclick="checkout()">Checkout</button>
+<button class="checkout" onclick="checkout()">
+
+Checkout
+
+</button>
 
 <br><br>
 
@@ -238,9 +270,10 @@ Cart (<span id="count">0</span>)
 </div>
 
 
+
 <div id="form" class="form">
 
-<h2>Delivery Details</h2>
+<h2>Delivery Address</h2>
 
 <input id="name" placeholder="Full Name">
 
@@ -250,7 +283,11 @@ Cart (<span id="count">0</span>)
 
 <textarea id="address" placeholder="Full Address"></textarea>
 
-<button class="checkout" onclick="sendOrder()">Place Order</button>
+<button class="checkout" onclick="sendOrder()">
+
+Place Order
+
+</button>
 
 </div>
 
@@ -258,18 +295,20 @@ Cart (<span id="count">0</span>)
 <footer>
 
 <p>Feel The Bass. Own The Power.</p>
+
 <p>Made In India 🇮🇳</p>
 
 </footer>
+
 
 
 <script>
 
 let cart=[];
 
-function addCart(name,price){
+function addCart(name,price,img){
 
-cart.push({name,price});
+cart.push({name,price,img});
 
 document.getElementById("count").innerText=cart.length;
 
@@ -280,9 +319,9 @@ alert("Added To Cart");
 
 function showCart(){
 
-document.getElementById("home").style.display="none";
+home.style.display="none";
 
-document.getElementById("cartPage").style.display="block";
+cartPage.style.display="block";
 
 renderCart();
 
@@ -291,9 +330,9 @@ renderCart();
 
 function backHome(){
 
-document.getElementById("home").style.display="block";
+home.style.display="block";
 
-document.getElementById("cartPage").style.display="none";
+cartPage.style.display="none";
 
 }
 
@@ -308,13 +347,17 @@ cart.forEach((item,i)=>{
 
 html+=`
 
-<div class="cart-item">
+<tr>
 
-${item.name} - ₹${item.price}
+<td><img src="${item.img}" width="60"></td>
 
-<button onclick="removeItem(${i})">Remove</button>
+<td>${item.name}</td>
 
-</div>
+<td>₹${item.price}</td>
+
+<td><button onclick="removeItem(${i})">Remove</button></td>
+
+</tr>
 
 `;
 
@@ -335,16 +378,16 @@ cart.splice(i,1);
 
 renderCart();
 
-document.getElementById("count").innerText=cart.length;
+count.innerText=cart.length;
 
 }
 
 
 function checkout(){
 
-document.getElementById("cartPage").style.display="none";
+cartPage.style.display="none";
 
-document.getElementById("form").style.display="block";
+form.style.display="block";
 
 }
 
