@@ -20,8 +20,6 @@ padding:15px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-position:sticky;
-top:0;
 box-shadow:0 0 10px #8000ff;
 }
 
@@ -113,23 +111,11 @@ display:none;
 padding:20px;
 }
 
-table{
-width:100%;
-border-collapse:collapse;
-}
-
-th,td{
+.cart-item{
+background:#1a1a22;
 padding:10px;
-border-bottom:1px solid #333;
-text-align:center;
-}
-
-.qty-btn{
-padding:5px 10px;
-border:none;
-background:#8000ff;
-color:white;
-cursor:pointer;
+margin:10px 0;
+border-radius:8px;
 }
 
 .checkout{
@@ -141,7 +127,6 @@ border-radius:25px;
 cursor:pointer;
 width:100%;
 font-weight:bold;
-margin-top:20px;
 }
 
 .form{
@@ -149,12 +134,12 @@ display:none;
 padding:20px;
 }
 
-input{
+input,textarea{
 width:100%;
 padding:10px;
 margin:8px 0;
-border:none;
 border-radius:6px;
+border:none;
 }
 
 footer{
@@ -182,8 +167,8 @@ Cart (<span id="count">0</span>)
 
 <div class="categories">
 
-<div>Portable</div>
-<div>Bluetooth</div>
+<div>Portable Speaker</div>
+<div>Bluetooth Speaker</div>
 <div>Home Theatre</div>
 <div>Bass Booster</div>
 <div>Party Box</div>
@@ -198,30 +183,22 @@ Cart (<span id="count">0</span>)
 <div class="card">
 <img src="https://images.unsplash.com/photo-1585386959984-a4155228e89d">
 <h3>Portable Speaker</h3>
-<p>₹300</p>
-<button class="add-btn" onclick="addCart('Portable Speaker',300,this)">
-Add To Cart
-</button>
+<p>Price ₹300</p>
+<button class="add-btn" onclick="addCart('Portable Speaker',300)">Add To Cart</button>
 </div>
-
 
 <div class="card">
 <img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1">
 <h3>Home Theatre</h3>
-<p>₹700</p>
-<button class="add-btn" onclick="addCart('Home Theatre',700,this)">
-Add To Cart
-</button>
+<p>Price ₹700</p>
+<button class="add-btn" onclick="addCart('Home Theatre',700)">Add To Cart</button>
 </div>
-
 
 <div class="card">
 <img src="https://images.unsplash.com/photo-1518441902117-0f66e3e00f12">
-<h3>Bass Booster</h3>
-<p>₹500</p>
-<button class="add-btn" onclick="addCart('Bass Booster',500,this)">
-Add To Cart
-</button>
+<h3>Bass Booster Speaker</h3>
+<p>Price ₹500</p>
+<button class="add-btn" onclick="addCart('Bass Booster Speaker',500)">Add To Cart</button>
 </div>
 
 </div>
@@ -229,11 +206,11 @@ Add To Cart
 
 <div class="repair">
 
-<h2>Upgrade Your Speaker</h2>
+<h2>Repair / Modify Service</h2>
 
 <p>Old Speaker Repair (Best Quality)</p>
 <p>Old Speaker Modify (Best Quality)</p>
-<p>आपका भरोसा ही हमारी जान है</p>
+<p>आपका भरोसा ही हमारी ताकत है</p>
 
 <br>
 
@@ -244,23 +221,11 @@ Add To Cart
 </div>
 
 
-
-<div id="cart" class="cart-page">
+<div id="cartPage" class="cart-page">
 
 <h2>Your Cart</h2>
 
-<table>
-
-<tr>
-<th>Image</th>
-<th>Item</th>
-<th>Price</th>
-<th>Quantity</th>
-</tr>
-
-<tbody id="cartItems"></tbody>
-
-</table>
+<div id="cartItems"></div>
 
 <h3>Total ₹<span id="total">0</span></h3>
 
@@ -273,25 +238,21 @@ Add To Cart
 </div>
 
 
-
 <div id="form" class="form">
 
 <h2>Delivery Details</h2>
 
-<input id="fname" placeholder="First Name">
-<input id="lname" placeholder="Last Name">
-<input id="address" placeholder="Address">
-<input id="apartment" placeholder="Apartment">
-<input id="state" placeholder="State">
-<input id="pin" placeholder="Pincode">
+<input id="name" placeholder="Full Name">
+
 <input id="phone" placeholder="Phone Number">
 
-<button class="checkout" onclick="sendOrder()">
-Place Order
-</button>
+<input id="pincode" placeholder="Pincode">
+
+<textarea id="address" placeholder="Full Address"></textarea>
+
+<button class="checkout" onclick="sendOrder()">Place Order</button>
 
 </div>
-
 
 
 <footer>
@@ -302,28 +263,15 @@ Place Order
 </footer>
 
 
-
 <script>
 
 let cart=[];
 
-function addCart(name,price,btn){
+function addCart(name,price){
 
-let img=btn.parentElement.querySelector("img").src;
+cart.push({name,price});
 
-let item=cart.find(p=>p.name===name);
-
-if(item){
-
-item.qty++;
-
-}else{
-
-cart.push({name,price,img,qty:1});
-
-}
-
-count.innerText=cart.length;
+document.getElementById("count").innerText=cart.length;
 
 alert("Added To Cart");
 
@@ -332,8 +280,9 @@ alert("Added To Cart");
 
 function showCart(){
 
-home.style.display="none";
-cart.style.display="block";
+document.getElementById("home").style.display="none";
+
+document.getElementById("cartPage").style.display="block";
 
 renderCart();
 
@@ -342,8 +291,9 @@ renderCart();
 
 function backHome(){
 
-home.style.display="block";
-cart.style.display="none";
+document.getElementById("home").style.display="block";
+
+document.getElementById("cartPage").style.display="none";
 
 }
 
@@ -351,35 +301,24 @@ cart.style.display="none";
 function renderCart(){
 
 let html="";
+
 let total=0;
 
 cart.forEach((item,i)=>{
 
 html+=`
 
-<tr>
+<div class="cart-item">
 
-<td><img src="${item.img}" width="60"></td>
+${item.name} - ₹${item.price}
 
-<td>${item.name}</td>
+<button onclick="removeItem(${i})">Remove</button>
 
-<td>₹${item.price}</td>
-
-<td>
-
-<button class="qty-btn" onclick="changeQty(${i},-1)">-</button>
-
-${item.qty}
-
-<button class="qty-btn" onclick="changeQty(${i},1)">+</button>
-
-</td>
-
-</tr>
+</div>
 
 `;
 
-total+=item.price*item.qty;
+total+=item.price;
 
 });
 
@@ -390,50 +329,51 @@ document.getElementById("total").innerText=total;
 }
 
 
-function changeQty(i,val){
-
-cart[i].qty+=val;
-
-if(cart[i].qty<=0){
+function removeItem(i){
 
 cart.splice(i,1);
 
-}
-
 renderCart();
 
-count.innerText=cart.length;
+document.getElementById("count").innerText=cart.length;
 
 }
 
 
 function checkout(){
 
-cart.style.display="none";
-form.style.display="block";
+document.getElementById("cartPage").style.display="none";
+
+document.getElementById("form").style.display="block";
 
 }
 
 
 function sendOrder(){
 
+let name=document.getElementById("name").value;
+
+let phone=document.getElementById("phone").value;
+
+let pin=document.getElementById("pincode").value;
+
+let address=document.getElementById("address").value;
+
 let msg="NEW ORDER %0A";
 
 cart.forEach(p=>{
 
-msg+=p.name+" x"+p.qty+" - ₹"+(p.price*p.qty)+"%0A";
+msg+=p.name+" - ₹"+p.price+"%0A";
 
 });
 
-msg+="%0AName: "+fname.value+" "+lname.value;
+msg+="%0AName:"+name;
 
-msg+="%0APhone: "+phone.value;
+msg+="%0APhone:"+phone;
 
-msg+="%0AAddress: "+address.value+" "+apartment.value;
+msg+="%0APincode:"+pin;
 
-msg+="%0AState: "+state.value;
-
-msg+="%0APincode: "+pin.value;
+msg+="%0AAddress:"+address;
 
 window.open("https://wa.me/919610651006?text="+msg);
 
