@@ -1,1 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VYRO ULTRA MAX</title>
 
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#050505;
+color:white;
+}
+
+header{
+padding:25px;
+text-align:center;
+background:#0a0a0a;
+border-bottom:2px solid #00cfff;
+box-shadow:0 0 20px #00cfff;
+}
+
+.logo{
+font-size:42px;
+font-weight:bold;
+color:#00cfff;
+text-shadow:0 0 15px #00cfff;
+}
+
+.tagline{
+margin-top:10px;
+color:#ccc;
+}
+
+.hero{
+padding:80px 20px;
+text-align:center;
+}
+
+.hero h1{
+font-size:55px;
+color:#00cfff;
+}
+
+.hero p{
+margin-top:15px;
+font-size:18px;
+color:#ccc;
+}
+
+.btn{
+display:inline-block;
+margin:10px;
+padding:15px 25px;
+background:#00cfff;
+color:black;
+text-decoration:none;
+font-weight:bold;
+border-radius:10px;
+}
+
+.services{
+padding:40px 20px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+}
+
+.card{
+background:#111;
+padding:20px;
+border-radius:15px;
+border:1px solid #00cfff;
+text-align:center;
+}
+
+.card h3{
+color:#00cfff;
+margin-bottom:10px;
+}
+
+footer{
+padding:30px;
+text-align:center;
+border-top:1px solid #00cfff;
+margin-top:40px;
+}
+
+.whatsapp{
+position:fixed;
+bottom:20px;
+right:20px;
+background:#25D366;
+color:white;
+padding:15px;
+border-radius:50%;
+text-decoration:none;
+font-size:24px;
+}
+
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo">⚡ VYRO ⚡</div>
+<div class="tagline">FEEL THE POWER</div>
+</header>
+
+<section class="hero">
+<h1>Repair • Upgrade • Modify</h1>
+<p>
+Speaker, Torch, RC Car, Remote Control,
+DC Fan and More
+</p>
+
+<a href="tel:+919610651006" class="btn">
+📞 Call Now
+</a>
+
+<a href="https://wa.me/919610651006" class="btn">
+💬 WhatsApp
+</a>
+</section>
+
+<section class="services">
+
+<div class="card">
+<h3>🔊 Speaker Repair</h3>
+<p>Repair & Upgrade</p>
+</div>
+
+<div class="card">
+<h3>🔦 Torch Repair</h3>
+<p>LED & Battery Service</p>
+</div>
+
+<div class="card">
+<h3>🚗 RC Car Upgrade</h3>
+<p>Motor & Controller Upgrade</p>
+</div>
+
+<div class="card">
+<h3>🎮 Remote Repair</h3>
+<p>Button & Circuit Repair</p>
+</div>
+
+<div class="card">
+<h3>🌀 DC Fan Repair</h3>
+<p>Motor & Speed Repair</p>
+</div>
+
+</section>
+  <!-- REPAIR FORM SECTION -->
+
+<section style="padding:50px 20px;">
+
+<h2 style="text-align:center;color:#00cfff;margin-bottom:25px;">
+⚡ Repair / Upgrade Request
+</h2>
+
+<div style="
+max-width:900px;
+margin:auto;
+background:#111;
+padding:25px;
+border-radius:20px;
+border:1px solid #00cfff;
+">
+
+<select id="serviceType" style="width:100%;padding:12px;margin:10px 0;">
+<option>Repair</option>
+<option>Upgrade</option>
+<option>Repair + Upgrade</option>
+</select>
+
+<input id="name" type="text" placeholder="Full Name"
+style="width:100%;padding:12px;margin:10px 0;">
+
+<input id="phone" type="text" placeholder="Mobile Number"
+style="width:100%;padding:12px;margin:10px 0;">
+
+<input id="city" type="text" placeholder="City / Village"
+style="width:100%;padding:12px;margin:10px 0;">
+
+<textarea id="address"
+placeholder="Full Address"
+style="width:100%;padding:12px;margin:10px 0;height:100px;"></textarea>
+
+<select id="device"
+style="width:100%;padding:12px;margin:10px 0;">
+<option>Speaker</option>
+<option>Torch</option>
+<option>RC Car</option>
+<option>Remote</option>
+<option>DC Fan</option>
+<option>Other</option>
+</select>
+
+<input id="brand" type="text"
+placeholder="Device Brand"
+style="width:100%;padding:12px;margin:10px 0;">
+
+<textarea id="problem"
+placeholder="Describe Problem / Upgrade Requirement"
+style="width:100%;padding:12px;margin:10px 0;height:120px;"></textarea>
+
+</div>
+
+</section>
+
+<!-- PAYMENT SECTION -->
+
+<section style="padding:20px;">
+
+<div style="
+max-width:900px;
+margin:auto;
+background:#111;
+padding:25px;
+border-radius:20px;
+border:1px solid #00cfff;
+">
+
+<h2 style="color:#00cfff;text-align:center;">
+💳 Payment Method
+</h2>
+
+<select id="paymentMethod"
+style="width:100%;padding:12px;margin-top:15px;">
+
+<option>UPI Payment</option>
+
+<option>Pay After Pickup</option>
+
+<option>Call & Confirm</option>
+
+</select>
+
+<p style="margin-top:15px;">
+UPI ID:
+<b>9610651006-2@ybl</b>
+</p>
+
+<input id="utr"
+type="text"
+placeholder="Enter UTR Number (If Paid)"
+style="width:100%;padding:12px;margin-top:15px;">
+
+</div>
+
+</section>
+
+<!-- TRUST BOX -->
+
+<section style="padding:20px;">
+
+<div style="
+max-width:900px;
+margin:auto;
+background:#111;
+padding:25px;
+border-radius:20px;
+border:1px solid #00cfff;
+">
+
+<h2 style="color:#00cfff;">
+🤝 Trust Based Service
+</h2>
+
+<p style="margin-top:15px;">
+If you cannot make payment now,
+you may choose
+<b>Pay After Pickup</b>.
+</p>
+
+<p style="margin-top:10px;">
+Our team may contact you for
+verification before pickup.
+</p>
+
+<p style="margin-top:10px;">
+📞 +91 9610651006
+</p>
+
+</div>
+
+</section>
+
+<!-- TRACKING -->
+
+<section style="padding:20px;">
+
+<div style="
+max-width:900px;
+margin:auto;
+background:#111;
+padding:25px;
+border-radius:20px;
+border:1px solid #00cfff;
+">
+
+<h2 style="color:#00cfff;text-align:center;">
+📦 Order Tracking
+</h2>
+
+<input
+type="text"
+placeholder="Enter Tracking ID"
+style="
+width:100%;
+padding:12px;
+margin-top:15px;
+">
+
+<button style="
+width:100%;
+padding:14px;
+margin-top:15px;
+background:#00cfff;
+border:none;
+font-weight:bold;
+cursor:pointer;
+">
+Track Order
+</button>
+
+</div>
+
+  </section>
+
+<footer>
+
+<h2>Privacy Policy</h2>
+
+<p>
+Customer information is used only for
+repair, pickup, delivery and support.
+</p>
+
+<p>
+© 2026 VYRO Electronics
+</p>
+
+</footer>
+
+<a class="whatsapp"
+href="https://wa.me/919610651006">
+💬
+</a>
+
+</body>
+  <!-- SUBMIT BUTTON -->
+
+<section style="padding:20px;">
+
+<div style="
+max-width:900px;
+margin:auto;
+text-align:center;
+">
+
+<button onclick="sendWhatsApp()"
+style="
+width:100%;
+padding:18px;
+font-size:18px;
+font-weight:bold;
+background:#00cfff;
+border:none;
+border-radius:15px;
+cursor:pointer;
+box-shadow:0 0 25px #00cfff;
+">
+🚀 Submit Request
+</button>
+
+</div>
+
+</section>
+
+<!-- FLOATING CALL BUTTON -->
+
+<a href="tel:+919610651006"
+style="
+position:fixed;
+bottom:100px;
+right:20px;
+width:65px;
+height:65px;
+border-radius:50%;
+background:#00cfff;
+color:black;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+text-decoration:none;
+font-weight:bold;
+box-shadow:0 0 25px #00cfff;
+z-index:9999;
+">
+📞
+</a>
+
+<script>
+
+function generateTrackingID(){
+
+return "VYRO-" +
+Math.floor(
+1000 + Math.random()*9000
+);
+
+}
+
+function sendWhatsApp(){
+
+let tracking =
+generateTrackingID();
+
+let service =
+document.getElementById("serviceType").value;
+
+let name =
+document.getElementById("name").value;
+
+let phone =
+document.getElementById("phone").value;
+
+let city =
+document.getElementById("city").value;
+
+let address =
+document.getElementById("address").value;
+
+let device =
+document.getElementById("device").value;
+
+let brand =
+document.getElementById("brand").value;
+
+let problem =
+document.getElementById("problem").value;
+
+let payment =
+document.getElementById("paymentMethod").value;
+
+let utr =
+document.getElementById("utr").value;
+
+if(
+name=="" ||
+phone=="" ||
+address==""
+){
+
+alert(
+"Please fill all required details."
+);
+
+return;
+
+}
+
+let msg =
+
+`⚡ VYRO NEW ORDER ⚡
+
+Tracking ID: ${tracking}
+
+Service: ${service}
+
+Customer Name: ${name}
+
+Mobile: ${phone}
+
+City: ${city}
+
+Address: ${address}
+
+Device: ${device}
+
+Brand: ${brand}
+
+Problem: ${problem}
+
+Payment Method: ${payment}
+
+UTR: ${utr}
+
+Status:
+Order Received
+
+Thank You ❤️
+VYRO Electronics`;
+
+window.open(
+
+"https://wa.me/919610651006?text=" +
+
+encodeURIComponent(msg),
+
+"_blank"
+
+);
+
+alert(
+
+"Order Submitted Successfully! Tracking ID: " +
+
+tracking
+
+);
+
+}
+
+</script>
+  </html>  
