@@ -523,4 +523,27 @@ tracking
 }
 
 </script>
-  </html>  
+  <script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAtNAQqgYeHJDnGUndkRn-9hLOupiiXqRI",
+  authDomain: "vyro-repair-3acf4.firebaseapp.com",
+  projectId: "vyro-repair-3acf4",
+  storageBucket: "vyro-repair-3acf4.firebasestorage.app",
+  messagingSenderId: "47965120195",
+  appId: "1:47965120195:web:a17ecd566152016c7d2476",
+  measurementId: "G-N3HJ3WFWF4"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+console.log("Firebase Connected");
+
+</script>
+
+</body>
+</html>
