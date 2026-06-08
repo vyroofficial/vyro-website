@@ -551,12 +551,15 @@ tracking
 </script>
   <script type="module">
 
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+
 import {
 getFirestore,
 collection,
 addDoc
-} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+}
+from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 const firebaseConfig = {
   apiKey: "AIzaSyAtNAQqgYeHJDnGUndkRn-9hLOupiiXqRI",
   authDomain: "vyro-repair-3acf4.firebaseapp.com",
@@ -568,6 +571,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
 const db = getFirestore(app);
 async function saveOrder(orderData){
 
