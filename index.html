@@ -478,9 +478,23 @@ alert(
 );
 
 return;
-
 }
+saveOrder({
 
+tracking:tracking,
+service:service,
+name:name,
+phone:phone,
+city:city,
+address:address,
+device:device,
+brand:brand,
+problem:problem,
+payment:payment,
+utr:utr,
+date:new Date().toISOString()
+
+});
 let msg =
 
 `⚡ VYRO NEW ORDER ⚡
