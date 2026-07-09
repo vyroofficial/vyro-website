@@ -349,15 +349,15 @@ border:1px solid #00cfff;
 </h2>
 
 <input
+id="trackingInput"
 type="text"
 placeholder="Enter Tracking ID"
-style="
-width:100%;
-padding:12px;
-margin-top:15px;
-">
+style="width:100%;padding:12px;margin-top:15px;">
 
-<button style="
+<button 
+<button
+onclick="trackOrder()"
+style="
 width:100%;
 padding:14px;
 margin-top:15px;
@@ -366,6 +366,10 @@ border:none;
 font-weight:bold;
 cursor:pointer;
 ">
+Track Order
+</button>
+
+<div id="trackingResult" style="margin-top:15px;"></div>
 Track Order
 </button>
 
