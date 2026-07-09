@@ -631,6 +631,37 @@ console.error(error);
 
 }
 
+import {
+  query,
+  where,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+window.trackOrder = async function () {
+
+  const id = document.getElementById("trackingInput").value;
+
+  const q = query(
+    collection(db, "orders"),
+    where("trackingId", "==", id)
+  );
+
+  const snap = await getDocs(q);
+
+  if (snap.empty) {
+    alert("Tracking ID Not Found");
+    return;
+  }
+
+  snap.forEach(doc => {
+    const data = doc.data();
+    alert(
+      "Status: " + data.orderStatus +
+      "\nCustomer: " + data.customerName +
+      "\nDevice: " + data.deviceType
+    );
+  });
+
     }
 console.log("Firebase Connected");
 
