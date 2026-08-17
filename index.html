@@ -1,1 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORPAT OT-512GT Full Features</title>
+    <style>
+        body {
+            display: flex; justify-content: center; align-items: center; height: 100vh;
+            background-color: #e0e5ec; font-family: 'Arial', sans-serif; margin: 0;
+        }
+        .calculator-body {
+            background-color: #2b2b2b; padding: 20px; border-radius: 10px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5); width: 380px; border-top: 5px solid #111;
+        }
+        .header {
+            display: flex; justify-content: space-between; align-items: flex-end;
+            margin-bottom: 5px; color: #fff;
+        }
+        .brand { font-size: 20px; font-weight: bold; font-family: Arial, sans-serif; }
+        .model { font-size: 12px; text-align: right; }
+        .display-container {
+            background-color: #c9d5c3; border: 3px solid #111; border-radius: 5px;
+            padding: 10px; margin-bottom: 15px; position: relative;
+        }
+        #display {
+            width: 100%; background: transparent; border: none; font-size: 40px;
+            text-align: right; outline: none; color: #111;
+            font-family: 'Courier New', Courier, monospace; letter-spacing: 2px;
+        }
+        .indicators {
+            position: absolute; top: 5px; left: 10px; font-size: 12px; font-weight: bold; color: #111;
+            font-family: 'Courier New', Courier, monospace; display: flex; gap: 10px;
+        }
+        .top-keys { display: grid; grid-template-columns: repeat(4, 1fr) 2fr; gap: 8px; margin-bottom: 15px; }
+        .top-btn {
+            background-color: #6d93b3; color: white; border: 2px solid #4a6b8c; border-radius: 3px;
+            padding: 8px 0; font-size: 11px; font-weight: bold; cursor: pointer;
+            box-shadow: 0px 2px 0px #3b556e;
+        }
+        .top-btn:active { transform: translateY(2px); box-shadow: none; }
+        .solar-panel { background-color: #333; border: 2px solid #111; box-shadow: inset 0px 0px 5px #000; }
+        .main-keys { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+        .btn {
+            background-color: #1a1a1a; color: #fff; border: 2px solid #000; border-radius: 4px;
+            padding: 12px 0; font-size: 18px; font-weight: bold; cursor: pointer;
+            box-shadow: 0px 3px 0px #000; text-align: center;
+        }
+        .btn:active { transform: translateY(3px); box-shadow: none; }
+        .btn-white { background-color: #f0f0f0; color: #000; border-color: #ccc; box-shadow: 0px 3px 0px #999; }
+        .btn-green { background-color: #2ecc71; color: #fff; border-color: #27ae60; box-shadow: 0px 3px 0px #1e8449; }
+        .small-text { font-size: 12px; }
+    </style>
+</head>
+<body>
 
+<div class="calculator-body">
+    <div class="header">
+        <div style="font-size: 10px;">120 STEPS CHECK</div>
+        <div><div class="brand">ORPAT®</div><div class="model">OT-512GT</div></div>
+    </div>
+    
+    <div class="display-container">
+        <div class="indicators">
+            <span id="ind-m" style="display:none;">M</span>
+            <span id="ind-gt" style="display:none;">GT</span>
+            <span id="ind-op" style="display:none;"></span>
+        </div>
+        <input type="text" id="display" disabled value="0">
+    </div>
+
+    <!-- Top Keys -->
+    <div class="top-keys">
+        <button class="top-btn" onclick="stepCheck(-1)">CHECK &larr;</button>
+        <button class="top-btn" onclick="stepCheck(1)">CHECK &rarr;</button>
+        <button class="top-btn" onclick="autoReplay()">AUTO<br>REPLAY</button>
+        <button class="top-btn" onclick="turnOff()">OFF</button>
+        <div class="solar-panel"></div>
+    </div>
+
+    <!-- Main Keypad -->
+    <div class="main-keys">
+        <button class="btn btn-white small-text" onclick="backspace()">CORRECT<br>00-0</button>
+        <button class="btn" onclick="inputNum('7')">7</button>
+        <button class="btn" onclick="inputNum('8')">8</button>
+        <button class="btn" onclick="inputNum('9')">9</button>
+        <button class="btn" onclick="setOp('/')">÷</button>
+        <button class="btn" onclick="calcSqrt()">√</button>
+        <button class="btn btn-green" onclick="allClear()">ON<br>AC</button>
+
+        <button class="btn btn-white" onclick="recallGT()">GT</button>
+        <button class="btn" onclick="inputNum('4')">4</button>
+        <button class="btn" onclick="inputNum('5')">5</button>
+        <button class="btn" onclick="inputNum('6')">6</button>
+        <button class="btn" onclick="setOp('*')">×</button>
+        <button class="btn" onclick="calcPercent()">%</button>
+        <button class="btn" onclick="memoryRecallClear()">MRC</button>
+
+        <button class="btn btn-white" onclick="calcMU()">MU</button>
+        <button class="btn" onclick="inputNum('1')">1</button>
+        <button class="btn" onclick="inputNum('2')">2</button>
+        <button class="btn" onclick="inputNum('3')">3</button>
+        <button class="btn" onclick="setOp('+')">+</button>
+        <button class="btn" onclick="setOp('-')">-</button>
+        <button class="btn" onclick="memorySub()">M-</button>
+
+        <button class="btn btn-white" onclick="toggleSign()">+/-</button>
+        <button class="btn" onclick="inputNum('0')">0</button>
+        <button class="btn" onclick="inputNum('00')">00</button>
+        <button class="btn" onclick="inputNum('.')">.</button>
+        <button class="btn btn-white small-text" onclick="clearEntry()">CE</button>
+        <button class="btn" onclick="calculate()">=</button>
+        <button class="btn" onclick="memoryAdd()">M+</button>
+    </div>
+</div>
+
+<script>
+    const display = document.getElementById('display');
+    const indM = document.getElementById('ind-m');
+    const indGT = document.getElementById('ind-gt');
+    const indOp = document.getElementById('ind-op');
+
+    let currentVal = '0';
+    let previousVal = null;
+    let operator = null;
+    let waitingForNewValue = false;
+    
+    let memory = 0;
+    let mrcState = 0; 
+    let grandTotal = 0;
+    let historySteps = [];
+    let currentStepIndex = -1;
+
+    function updateDisplay(val) {
+        let strVal = val.toString();
+        if(strVal.length > 12) strVal = strVal.substring(0, 12);
+        display.value = strVal;
+    }
+
+    function updateOpIndicator(op) {
+        if(op === null) {
+            indOp.style.display = 'none';
+        } else {
+            indOp.innerText = op;
+            indOp.style.display = 'inline';
+        }
+    }
+
+    function inputNum(num) {
+        if (waitingForNewValue) {
+            currentVal = num;
+            waitingForNewValue = false;
+        } else {
+            currentVal = currentVal === '0' && num !== '.' && num !== '00' ? num : currentVal + num;
+        }
+        updateDisplay(currentVal);
+        mrcState = 0;
+    }
+
+    // NEW: Backspace Feature (CORRECT 00-0)
+    function backspace() {
+        if (waitingForNewValue || currentVal === '0' || currentVal === 'ERROR') return;
+        currentVal = currentVal.slice(0, -1);
+        if (currentVal === '' || currentVal === '-') currentVal = '0';
+        updateDisplay(currentVal);
+    }
+
+    function setOp(op) {
+        if (operator !== null && !waitingForNewValue) {
+            calculate(false);
+        } else {
+            previousVal = parseFloat(currentVal);
+        }
+        operator = op;
+        updateOpIndicator(op);
+        waitingForNewValue = true;
+        historySteps.push({ val: currentVal, op: op });
+        currentStepIndex = historySteps.length - 1;
+    }
+
+    function calculate(isEquals = true) {
+        if (operator === null || previousVal === null) return;
+        let result = 0;
+        let currentNum = parseFloat(currentVal);
+
+        switch (operator) {
+            case '+': result = previousVal + currentNum; break;
+            case '-': result = previousVal - currentNum; break;
+            case '*': result = previousVal * currentNum; break;
+            case '/': result = currentNum !== 0 ? previousVal / currentNum : 'ERROR'; break;
+        }
+
+        if (result !== 'ERROR') {
+            result = parseFloat(result.toPrecision(12));
+            if (isEquals) {
+                grandTotal += result;
+                indGT.style.display = 'inline';
+                operator = null;
+                updateOpIndicator(null);
+            }
+        }
+        currentVal = result.toString();
+        previousVal = result;
+        waitingForNewValue = true;
+        updateDisplay(currentVal);
+    }
+
+    function allClear() {
+        currentVal = '0'; previousVal = null; operator = null; waitingForNewValue = false;
+        historySteps = []; currentStepIndex = -1; display.disabled = true;
+        updateOpIndicator(null);
+        updateDisplay(currentVal);
+    }
+
+    function clearEntry() { currentVal = '0'; updateDisplay(currentVal); }
+    function turnOff() { display.value = ''; updateOpIndicator(null); }
+
+    function toggleSign() {
+        if (currentVal !== '0' && currentVal !== 'ERROR') {
+            currentVal = (parseFloat(currentVal) * -1).toString();
+            updateDisplay(currentVal);
+        }
+    }
+
+    function calcSqrt() {
+        if (parseFloat(currentVal) >= 0) {
+            currentVal = Math.sqrt(parseFloat(currentVal)).toString();
+            updateDisplay(currentVal);
+        } else {
+            currentVal = 'ERROR'; updateDisplay(currentVal);
+        }
+    }
+
+    function calcPercent() {
+        if (operator !== null && previousVal !== null) {
+            let percentVal = (previousVal * parseFloat(currentVal)) / 100;
+            currentVal = percentVal.toString();
+            calculate(true); 
+        }
+    }
+
+    // NEW: MU (Mark-Up) Feature
+    function calcMU() {
+        if (operator !== null && previousVal !== null) {
+            let result = 0;
+            let currentNum = parseFloat(currentVal);
+            if (operator === '/') {
+                result = previousVal / (1 - (currentNum / 100)); // Standard Business Markup
+            } else if (operator === '*') {
+                result = previousVal * (1 + (currentNum / 100));
+            } else if (operator === '+') {
+                result = previousVal + (previousVal * (currentNum/100));
+            } else if (operator === '-') {
+                result = previousVal - (previousVal * (currentNum/100));
+            }
+            currentVal = parseFloat(result.toPrecision(12)).toString();
+            operator = null;
+            updateOpIndicator(null);
+            waitingForNewValue = true;
+            updateDisplay(currentVal);
+        }
+    }
+
+    function memoryAdd() {
+        memory += parseFloat(currentVal);
+        indM.style.display = 'inline';
+        waitingForNewValue = true;
+    }
+
+    function memorySub() {
+        memory -= parseFloat(currentVal);
+        indM.style.display = 'inline';
+        waitingForNewValue = true;
+    }
+
+    function memoryRecallClear() {
+        if (mrcState === 0) {
+            currentVal = memory.toString();
+            updateDisplay(currentVal);
+            mrcState = 1;
+        } else {
+            memory = 0;
+            indM.style.display = 'none';
+            mrcState = 0;
+        }
+        waitingForNewValue = true;
+    }
+
+    function recallGT() {
+        currentVal = grandTotal.toString();
+        updateDisplay(currentVal);
+        waitingForNewValue = true;
+    }
+
+    function stepCheck(direction) {
+        if (historySteps.length === 0) return;
+        currentStepIndex += direction;
+        if (currentStepIndex < 0) currentStepIndex = 0;
+        if (currentStepIndex >= historySteps.length) currentStepIndex = historySteps.length - 1;
+        updateDisplay(historySteps[currentStepIndex].val);
+    }
+
+    function autoReplay() {
+        if (historySteps.length === 0) return;
+        let i = 0;
+        let interval = setInterval(() => {
+            updateDisplay(historySteps[i].val);
+            i++;
+            if (i >= historySteps.length) clearInterval(interval);
+        }, 1000);
+    }
+</script>
+
+</body>
+</html>
