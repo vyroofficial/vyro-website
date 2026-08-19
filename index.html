@@ -1,35 +1,835 @@
-package com.example.freetv.data
+===== FILE: .gitignore =====
+```
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+app/schemas/
+app/release/
+app/debug/
+```
 
-import com.example.freetv.parser.EpgGuide
-import com.example.freetv.parser.EpgParser
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import java.net.URL
+===== FILE: README.md =====
+```
+# Free TV — Android TV Live TV Player
 
-class EpgRepository {
+A lightweight, standalone Android TV / Google TV app that plays **live streams you
+are authorized to access** — official/free-to-air internet streams, your own
+M3U playlists, or a stream URL exposed by a compatible satellite network
+tuner. It behaves like a simple set-top box: open the app, the last (or first)
+channel plays automatically, and CH+/CH- or the D-pad changes channels.
 
-    private val _guide = MutableStateFlow<EpgGuide?>(null)
-    val guide: StateFlow<EpgGuide?> = _guide.asStateFlow()
+**This app does not, and will not:** receive satellite RF directly, decrypt or
+bypass DRM/conditional access, scrape or redistribute broadcaster content, or
+ship any pirated channel list. The bundled sample channels use non-working
+`https://example.invalid/...` URLs — you must add your own authorized sources
+via **Sources**.
 
-    private val _lastError = MutableStateFlow<String?>(null)
-    val lastError: StateFlow<String?> = _lastError.asStateFlow()
+---
 
-    fun loadFromUrl(url: String) {
-        try {
-            val connection = URL(url).openConnection()
-            connection.connectTimeout = 10_000
-            connection.readTimeout = 15_000
-            connection.getInputStream().use { input ->
-                _guide.value = EpgParser.parse(input)
-                _lastError.value = null
-            }
-        } catch (ex: Exception) {
-            _lastError.value = ex.message ?: "Failed to load EPG"
+## 1. What's included
+
+```
+FreeTV/
+├── settings.gradle.kts
+├── build.gradle.kts
+├── gradle.properties
+├── app/
+│   ├── build.gradle.kts          # R8, resource shrinking, ABI splits, deps
+│   ├── proguard-rules.pro
+│   └── src/main/
+│       ├── AndroidManifest.xml   # TV launcher + banner, minimal permissions
+│       ├── java/com/example/freetv/
+│       │   ├── FreeTvApplication.kt      # manual DI (no Hilt/Dagger — smaller APK)
+│       │   ├── data/
+│       │   │   ├── ChannelEntity.kt      # Room entity
+│       │   │   ├── ChannelDao.kt
+│       │   │   ├── AppDatabase.kt
+│       │   │   ├── ChannelRepository.kt  # single source of truth for channels
+│       │   │   └── SettingsRepository.kt # DataStore-backed settings
+│       │   ├── parser/
+│       │   │   ├── M3uParser.kt          # #EXTM3U / #EXTINF parser
+│       │   │   └── EpgParser.kt          # optional XMLTV NOW/NEXT parser
+│       │   ├── player/
+│       │   │   └── PlayerManager.kt      # single ExoPlayer instance, zapping, retry
+│       │   ├── util/
+│       │   │   └── NetworkMonitor.kt     # connectivity flow, auto-reconnect
+│       │   ├── viewmodel/
+│       │   │   └── ChannelViewModel.kt
+│       │   └── ui/
+│       │       ├── LiveTvActivity.kt     # main/launcher screen — remote + touch input
+│       │       ├── ChannelListActivity.kt
+│       │       ├── ChannelAdapter.kt
+│       │       ├── SourcesActivity.kt    # local / import M3U / remote M3U / tuner
+│       │       └── SettingsActivity.kt
+│       └── res/                          # dark TV theme, vector icons only
+```
+No Firebase, no analytics, no bundled video/audio/fonts, no bitmap image
+assets — only vector drawables. Channel logos are loaded from the URLs in
+your playlist, never bundled.
+
+---
+
+## 2. Opening the project
+
+1. Install **Android Studio** (Koala/2024.1 or newer recommended).
+2. `File > Open` and select the `FreeTV/` folder.
+3. Let Gradle sync. It will download AndroidX, Media3 1.3.1, Room 2.6.1, and
+   DataStore automatically the first time (requires internet).
+4. If sync complains about the Android Gradle Plugin or Kotlin version being
+   older than what your installed Android Studio expects, use
+   **File > Project Structure > Suggested changes** to bump them — the
+   architecture doesn't depend on an exact version.
+
+### Changing the package name
+
+The package is `com.example.freetv` everywhere (manifest, `namespace` /
+`applicationId` in `app/build.gradle.kts`, and every Kotlin file's `package`
+line). In Android Studio: right-click the `com.example.freetv` folder →
+**Refactor > Rename** → refactor the package, then update `namespace` and
+`applicationId` in `app/build.gradle.kts` to match.
+
+---
+
+## 3. Building
+
+### Debug APK
+```
+./gradlew assembleDebug
+```
+Output: `app/build/outputs/apk/debug/app-debug.apk` (and per-ABI variants
+alongside it, since ABI splits are enabled even for debug).
+
+### Release APK
+```
+./gradlew assembleRelease
+```
+Output: `app/build/outputs/apk/release/`. R8 + resource shrinking are
+enabled for this build type (see `app/build.gradle.kts`).
+
+**Signing:** this project does not ship a keystore or hardcoded signing
+config (never store secrets in source). Before shipping, add a signing
+config in Android Studio: **Build > Generate Signed Bundle / APK**, create or
+choose a keystore, and build a signed release. Don't distribute an unsigned
+release build as your final artifact.
+
+### Which APK do I install?
+
+ABI splits are enabled, so a release build produces several APKs:
+
+| APK | Use for |
+|---|---|
+| `app-arm64-v8a-release.apk` | Most modern Android TV boxes / Google TV / Fire TV (2017+) — 64-bit ARM. Smallest, preferred when in doubt. |
+| `app-armeabi-v7a-release.apk` | Older/low-end 32-bit ARM TV boxes. |
+| `app-universal-release.apk` | Fallback that works on any device but is the largest — use only if you're not sure which ABI your box uses, or when sideloading via a store mechanism that requires one APK. |
+
+Check your box's CPU architecture in its system/about screen if unsure; ARM
+64-bit is by far the most common on TVs sold since ~2018.
+
+---
+## 4. Installing on an Android TV device
+
+```
+adb connect <tv-ip-address>:5555
+adb install -r app/build/outputs/apk/release/app-arm64-v8a-release.apk
+```
+Or sideload via a file manager / USB drive if `adb` isn't available. The app
+registers as a Leanback launcher app, so it will appear as a row on the
+Android TV / Google TV home screen automatically.
+
+---
+
+## 5. Adding legal live channels
+
+Free TV ships with **no working channels** — only clearly-fake placeholder
+entries so the UI has something to show before you configure a real source.
+Go to **Sources** and use one of:
+
+- **Import M3U** — pick a local `.m3u` / `.m3u8` file (e.g. one you've saved
+  from a legitimate provider) using the system file picker.
+- **Remote Playlist** — paste the URL of an M3U playlist you are authorized
+  to use; the app fetches and parses it directly.
+- **Network Tuner** — if you own a compatible DVB-S/S2 receiver/tuner box
+  that exposes its authorized output as a network stream URL (this is
+  hardware- and vendor-specific — Free TV does not include or emulate any
+  tuner driver), add that URL as a channel here.
+- **Local Channels** — the built-in Room database; edit `ChannelRepository
+  .seedSampleChannelsIfEmpty()` if you want to ship your own default list
+  inside the app instead of importing at runtime.
+
+Imported playlists replace only the channels from that same source on
+re-import (tagged internally by `source`), so re-importing an updated M3U
+won't duplicate entries or wipe your manually-added tuner channels.
+
+---
+
+## 6. Remote control reference
+
+| Key | Action |
+|---|---|
+| CH+ / D-pad Up | Next channel |
+| CH- / D-pad Down | Previous channel |
+| OK / Enter | Show playback controls (Play/Pause, CH+/-, Channel List, Audio, Subtitles, Aspect, Settings) |
+| Back | Hide controls |
+| Menu | Open Channel List |
+| 0-9 | Direct channel entry (buffers up to 4 digits, commits after ~1.5s of inactivity) |
+
+Touch devices: tap to show controls, double-tap to cycle aspect ratio, swipe
+up/down to change channel. Touch and D-pad input don't interfere with each
+other.
+
+---
+
+## 7. Auto-start & Kiosk mode
+
+- **Start Live TV Automatically** (Settings) controls whether opening the app
+  skips straight to playback — this is an in-app setting only.
+- True device-level auto-launch-on-boot requires either (a) the user setting
+  Free TV as their TV box's default/home launcher via Android TV system
+  settings, or (b) a device-owner/kiosk provisioning profile set up by whoever
+  manages the box (common on dedicated TV-box deployments). Free TV does not
+  and should not silently request device-owner or accessibility permissions
+  to force this — that would be exactly the kind of permission abuse the spec
+  asked to avoid. Configure it through Android's own launcher/kiosk
+  provisioning tools instead.
+- **Kiosk Mode** in-app just hides navigation chrome and keeps the app on the
+  Live TV screen; press **Back** to exit it (documented, no hidden exit).
+
+---
+
+## 8. Known limitations / next steps
+
+- EPG (`EpgParser.kt`) parses XMLTV into NOW/NEXT data but isn't wired to a
+  visible EPG screen yet — the bottom overlay currently always shows "LIVE".
+  Hook `EpgParser.nowAndNext()` into `LiveTvActivity.updateChannelInfo()`
+  once you have an XMLTV source URL to pull from.
+- Subtitle track selection UI is stubbed (shows a toast) — wire it to
+  `exoPlayer.currentTracks` text-track groups the same way audio tracks are
+  handled in `PlayerManager.availableAudioTracks()`.
+- No automated CI; run the tests below locally before releasing.
+
+## 9. Tests to run before release
+
+Unit-test-worthy logic already isolated for testability: `M3uParser`,
+`EpgParser`, `ChannelRepository` (favorites/last-channel/replaceSource), and
+`PlayerManager` state transitions. Add a `test/` source set and cover:
+invalid M3U input, empty playlists, malformed EPG XML, and channel-switch
+edge cases (single channel, all channels disabled).
+
+Manually verify: real Android TV remote, Google TV remote, a low-RAM box, a
+throttled/offline network, mid-playback stream failure, and app
+background/foreground/restart cycles.
+```
+===== FILE: app/build.gradle.kts =====
+```
+plugins {
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
+}
+
+android {
+    namespace = "com.example.freetv"
+    compileSdk = 34
+
+    defaultConfig {
+        applicationId = "com.example.freetv"
+        // Android TV boxes commonly run API 21+ (Android 5.0 Lollipop / Fire TV)
+        minSdk = 21
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0.0"
+
+        // Room schema export (kept out of VCS noise; used for migration testing)
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
         }
     }
 
-    fun clear() {
-        _guide.value = null
+    // Produce smaller, architecture-specific APKs instead of one fat universal APK.
+    // See README section "Which APK do I install?" for guidance.
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("armeabi-v7a", "arm64-v8a")
+            isUniversalApk = true // still emit one universal APK as a fallback
+        }
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+        debug {
+            isMinifyEnabled = false
+            isShrinkResources = false
+            applicationIdSuffix = ".debug"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    buildFeatures {
+        viewBinding = true
+    }
+
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
     }
 }
+
+dependencies {
+    // Core / lightweight AndroidX only — no unnecessary libraries.
+    implementation("androidx.core:core-ktx:1.13.1")
+    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("androidx.activity:activity-ktx:1.9.0")
+    implementation("androidx.leanback:leanback:1.0.0") // TV-focused widgets/theme, small footprint
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.3")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+
+    // Media3 / ExoPlayer — single playback engine, no competing video libraries.
+    implementation("androidx.media3:media3-exoplayer:1.3.1")
+    implementation("androidx.media3:media3-exoplayer-hls:1.3.1")
+    implementation("androidx.media3:media3-exoplayer-dash:1.3.1")
+    implementation("androidx.media3:media3-ui:1.3.1")
+    implementation("androidx.media3:media3-common:1.3.1")
+    implementation("androidx.media3:media3-datasource-okhttp:1.3.1")
+
+    // Room — local channel database.
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
+
+    // DataStore — lightweight key-value settings, replaces SharedPreferences.
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
+
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+}
+```
+
+===== FILE: app/proguard-rules.pro =====
+```
+# Media3 / ExoPlayer keeps its own consumer rules; keep Room entities' fields.
+-keep class com.example.freetv.data.** { *; }
+-dontwarn org.checkerframework.**
+-dontwarn com.google.errorprone.annotations.**
+```
+
+===== FILE: app/src/main/AndroidManifest.xml =====
+```
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Only permission genuinely required: playing network streams. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Declare TV support; do not require a touchscreen (TV boxes have none). -->
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+
+    <application
+        android:name=".FreeTvApplication"
+        android:allowBackup="true"
+        android:banner="@drawable/ic_app_banner"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.FreeTV"
+        android:hardwareAccelerated="true"
+        tools:targetApi="34">
+
+        <!-- Live TV screen: launcher + Android TV / Google TV leanback launcher -->
+        <activity
+            android:name=".ui.LiveTvActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.FreeTV.Player">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.ChannelListActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.LiveTvActivity"
+            android:theme="@style/Theme.FreeTV" />
+
+        <activity
+            android:name=".ui.SourcesActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.LiveTvActivity"
+            android:theme="@style/Theme.FreeTV" />
+
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.LiveTvActivity"
+            android:theme="@style/Theme.FreeTV" />
+
+    </application>
+        </manifest>
+...
+===== FILE: app/src/main/java/com/example/freetv/FreeTvApplication.kt =====
+```
+package com.example.freetv
+
+import android.app.Application
+import com.example.freetv.data.AppDatabase
+import com.example.freetv.data.ChannelRepository
+import com.example.freetv.data.SettingsRepository
+
+/**
+ * Manual, lightweight service locator. Deliberately avoids Hilt/Dagger/Koin
+ * to keep the dependency graph and APK size minimal.
+ */
+class FreeTvApplication : Application() {
+
+    lateinit var channelRepository: ChannelRepository
+        private set
+
+    lateinit var settingsRepository: SettingsRepository
+        private set
+
+    override fun onCreate() {
+        super.onCreate()
+        val db = AppDatabase.getInstance(this)
+        channelRepository = ChannelRepository(db.channelDao())
+        settingsRepository = SettingsRepository(this)
+    }
+}
+```
+
+===== FILE: app/src/main/java/com/example/freetv/data/AppDatabase.kt =====
+```
+package com.example.freetv.data
+
+import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverter
+import androidx.room.TypeConverters
+
+class Converters {
+    @TypeConverter
+    fun fromStreamType(value: StreamType): String = value.name
+
+    @TypeConverter
+    fun toStreamType(value: String): StreamType =
+        runCatching { StreamType.valueOf(value) }.getOrDefault(StreamType.HLS)
+
+    @TypeConverter
+    fun fromCategory(value: ChannelCategory): String = value.name
+
+    @TypeConverter
+    fun toCategory(value: String): ChannelCategory =
+        runCatching { ChannelCategory.valueOf(value) }.getOrDefault(ChannelCategory.OTHER)
+}
+
+@Database(entities = [ChannelEntity::class], version = 1, exportSchema = true)
+@TypeConverters(Converters::class)
+abstract class AppDatabase : RoomDatabase() {
+
+    abstract fun channelDao(): ChannelDao
+
+    companion object {
+        @Volatile private var INSTANCE: AppDatabase? = null
+
+        fun getInstance(context: Context): AppDatabase =
+            INSTANCE ?: synchronized(this) {
+                INSTANCE ?: Room.databaseBuilder(
+                    context.applicationContext,
+                    AppDatabase::class.java,
+                    "freetv.db"
+                ).build().also { INSTANCE = it }
+            }
+    }
+}
+```
+
+===== FILE: app/src/main/java/com/example/freetv/data/ChannelDao.kt =====
+```
+package com.example.freetv.data
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface ChannelDao {
+
+    @Query("SELECT * FROM channels ORDER BY channelNumber ASC")
+    fun observeAll(): Flow<List<ChannelEntity>>
+
+    @Query("SELECT * FROM channels WHERE isEnabled = 1 ORDER BY channelNumber ASC")
+    fun observeEnabled(): Flow<List<ChannelEntity>>
+
+    @Query("SELECT * FROM channels WHERE isEnabled = 1 ORDER BY channelNumber ASC")
+    suspend fun getEnabledOnce(): List<ChannelEntity>
+
+    @Query("SELECT * FROM channels WHERE isFavorite = 1 ORDER BY channelNumber ASC")
+    fun observeFavorites(): Flow<List<ChannelEntity>>
+
+    @Query("SELECT * FROM channels WHERE category = :category AND isEnabled = 1 ORDER BY channelNumber ASC")
+    fun observeByCategory(category: ChannelCategory): Flow<List<ChannelEntity>>
+
+    @Query("SELECT * FROM channels WHERE id = :id LIMIT 1")
+    suspend fun getById(id: Long): ChannelEntity?
+
+    @Query("SELECT * FROM channels WHERE channelNumber = :number LIMIT 1")
+    suspend fun getByNumber(number: Int): ChannelEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(channels: List<ChannelEntity>): List<Long>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(channel: ChannelEntity): Long
+
+    @Update
+    suspend fun update(channel: ChannelEntity)
+
+    @Delete
+    suspend fun delete(channel: ChannelEntity)
+
+    @Query("DELETE FROM channels WHERE source = :source")
+    suspend fun deleteBySource(source: String)
+
+    @Query("UPDATE channels SET isFavorite = :favorite WHERE id = :id")
+    suspend fun setFavorite(id: Long, favorite: Boolean)
+
+    @Query("SELECT COUNT(*) FROM channels")
+    suspend fun count(): Int
+}
+```
+
+===== FILE: app/src/main/java/com/example/freetv/data/ChannelEntity.kt =====
+```
+package com.example.freetv.data
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+/**
+ * Stream container formats Media3 can play. Used only to pick the right
+ * MediaSource factory in PlayerManager — never used to bypass or decrypt anything.
+ */
+enum class StreamType {
+    HLS, DASH, PROGRESSIVE, OTHER
+}
+
+enum class ChannelCategory {
+    NEWS, ENTERTAINMENT, MOVIES, MUSIC, SPORTS, KIDS, EDUCATION, REGIONAL, DEVOTIONAL, OTHER
+}
+
+@Entity(tableName = "channels")
+data class ChannelEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val channelNumber: Int,
+    val name: String,
+    val logoUrl: String? = null,
+    val streamUrl: String,
+    val streamType: StreamType = StreamType.HLS,
+    val category: ChannelCategory = ChannelCategory.OTHER,
+    val language: String? = null,
+    val epgId: String? = null,
+    val isFavorite: Boolean = false,
+    val isEnabled: Boolean = true,
+    // Which source added this channel — lets "Refresh" replace only imported entries.
+    val source: String = "local"
+)
+```
+
+===== FILE: app/src/main/java/com/example/freetv/data/ChannelRepository.kt =====
+```
+package com.example.freetv.data
+
+import kotlinx.coroutines.flow.Flow
+ **
+ * Repository sitting between the UI/ViewModel layer and Room.
+ * All channel reads/writes for the whole app go through here.
+ */
+class ChannelRepository(private val dao: ChannelDao) {
+
+    fun observeEnabledChannels(): Flow<List<ChannelEntity>> = dao.observeEnabled()
+
+    fun observeAllChannels(): Flow<List<ChannelEntity>> = dao.observeAll()
+
+    fun observeFavorites(): Flow<List<ChannelEntity>> = dao.observeFavorites()
+
+    fun observeByCategory(category: ChannelCategory): Flow<List<ChannelEntity>> =
+        dao.observeByCategory(category)
+
+    suspend fun getEnabledOnce(): List<ChannelEntity> = dao.getEnabledOnce()
+
+    suspend fun getById(id: Long): ChannelEntity? = dao.getById(id)
+
+    suspend fun getByNumber(number: Int): ChannelEntity? = dao.getByNumber(number)
+
+    suspend fun toggleFavorite(channel: ChannelEntity): Boolean {
+        val newState = !channel.isFavorite
+        dao.setFavorite(channel.id, newState)
+        return newState
+    }
+
+    suspend fun replaceSource(source: String, channels: List<ChannelEntity>) {
+        dao.deleteBySource(source)
+        dao.insertAll(channels.map { it.copy(source = source) })
+    }
+
+    suspend fun addOrUpdate(channel: ChannelEntity) = dao.insert(channel)
+
+    suspend fun setEnabled(channel: ChannelEntity, enabled: Boolean) =
+        dao.update(channel.copy(isEnabled = enabled))
+
+    suspend fun channelCount(): Int = dao.count()
+
+    /**
+     * Non-working placeholder channels only, as required — no real/pirated stream URLs.
+     * Users are expected to replace these via Sources > Import M3U / Remote Playlist,
+     * or by editing this list with their own authorized stream endpoints.
+     */
+    suspend fun seedSampleChannelsIfEmpty() {
+        if (dao.count() > 0) return
+        val sample = listOf(
+            ChannelEntity(
+                channelNumber = 1, name = "Example News",
+                streamUrl = "https://example.invalid/live/news/index.m3u8",
+                streamType = StreamType.HLS, category = ChannelCategory.NEWS, source = "sample"
+            ),
+            ChannelEntity(
+                channelNumber = 2, name = "Example Entertainment",
+                streamUrl = "https://example.invalid/live/entertainment/index.m3u8",
+                streamType = StreamType.HLS, category = ChannelCategory.ENTERTAINMENT, source = "sample"
+            ),
+            ChannelEntity(
+                channelNumber = 3, name = "Example Music",
+                streamUrl = "https://example.invalid/live/music/index.m3u8",
+                streamType = StreamType.HLS, category = ChannelCategory.MUSIC, source = "sample"
+            ),
+            ChannelEntity(
+                channelNumber = 4, name = "Example Sports",
+                streamUrl = "https://example.invalid/live/sports/index.m3u8",
+                streamType = StreamType.HLS, category = ChannelCategory.SPORTS, source = "sample"
+            ),
+            ChannelEntity(
+                channelNumber = 5, name = "Example Kids",
+                streamUrl = "https://example.invalid/live/kids/index.m3u8",
+                streamType = StreamType.HLS, category = ChannelCategory.KIDS, source = "sample"
+            ),
+        )
+        dao.insertAll(sample)
+    }
+}
+```
+
+===== FILE: app/src/main/java/com/example/freetv/data/SettingsRepository.kt =====
+```
+package com.example.freetv.data
+
+import android.content.Context
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+
+private val Context.dataStore by preferencesDataStore(name = "freetv_settings")
+
+enum class AspectRatioMode { FIT, FILL, ORIGINAL, RATIO_16_9 }
+
+/** Central place for every persisted setting listed in the SETTINGS screen. */
+class SettingsRepository(private val context: Context) {
+
+    private object Keys {
+        val LAST_CHANNEL_ID = longPreferencesKey("last_channel_id")
+        val AUTO_PLAY = booleanPreferencesKey("auto_play")
+        val AUTO_RETRY = booleanPreferencesKey("auto_retry")
+        val AUTO_START = booleanPreferencesKey("auto_start")
+        val RESTORE_LAST_CHANNEL = booleanPreferencesKey("restore_last_channel")
+        val KIOSK_MODE = booleanPreferencesKey("kiosk_mode")
+        val ASPECT_RATIO = stringPreferencesKey("aspect_ratio")
+        val PREFERRED_AUDIO = stringPreferencesKey("preferred_audio")
+        val SHOW_LOGO = booleanPreferencesKey("show_channel_logo")
+        val SHOW_PROGRAM_INFO = booleanPreferencesKey("show_program_info")
+        val EPG_ENABLED = booleanPreferencesKey("epg_enabled")
+        val REMOTE_M3U_URL = stringPreferencesKey("remote_m3u_url")
+    }
+
+    val lastChannelId: Flow<Long?> =
+        context.dataStore.data.map { it[Keys.LAST_CHANNEL_ID] }
+
+    val autoPlay: Flow<Boolean> =
+        context.dataStore.data.map { it[Keys.AUTO_PLAY] ?: true }
+
+    val autoRetry: Flow<Boolean> =
+        context.dataStore.data.map { it[Keys.AUTO_RETRY] ?: true }
+
+    val autoStart: Flow<Boolean> =
+        context.dataStore.data.map { it[Keys.AUTO_START] ?: true }
+
+    val restoreLastChannel: Flow<Boolean> =
+        context.dataStore.data.map { it[Keys.RESTORE_LAST_CHANNEL] ?: true }
+
+    val kioskMode: Flow<Boolean> =
+        context.dataStore.data.map { it[Keys.KIOSK_MODE] ?: false }
+
+    val aspectRatio: Flow<AspectRatioMode> =
+        context.dataStore.data.map {
+            runCatching { AspectRatioMode.valueOf(it[Keys.ASPECT_RATIO] ?: "") }
+                .getOrDefault(AspectRatioMode.FIT)
+        }
+
+    val showLogo: Flow<Boolean> =
+        context.dataStore.data.map { it[Keys.SHOW_LOGO] ?: true }
+
+    val showProgramInfo: Flow<Boolean> =
+        context.dataStore.data.map { it[Keys.SHOW_PROGRAM_INFO] ?: true }
+
+    val epgEnabled: Flow<Boolean> =
+        context.dataStore.data.map { it[Keys.EPG_ENABLED] ?: true }
+
+    val remoteM3uUrl: Flow<String?> =
+        context.dataStore.data.map { it[Keys.REMOTE_M3U_URL] }
+
+    suspend fun setLastChannelId(id: Long) {
+        context.dataStore.edit { it[Keys.LAST_CHANNEL_ID] = id }
+    }
+
+    suspend fun setAutoPlay(v: Boolean) = context.dataStore.edit { it[Keys.AUTO_PLAY] = v }
+    suspend fun setAutoRetry(v: Boolean) = context.dataStore.edit { it[Keys.AUTO_RETRY] = v }
+    suspend fun setAutoStart(v: Boolean) = context.dataStore.edit { it[Keys.AUTO_START] = v }
+    suspend fun setRestoreLastChannel(v: Boolean) = context.dataStore.edit { it[Keys.RESTORE_LAST_CHANNEL] = v }
+    suspend fun setKioskMode(v: Boolean) = context.dataStore.edit { it[Keys.KIOSK_MODE] = v }
+    suspend fun setShowLogo(v: Boolean) = context.dataStore.edit { it[Keys.SHOW_LOGO] = v }
+    suspend fun setShowProgramInfo(v: Boolean) = context.dataStore.edit { it[Keys.SHOW_PROGRAM_INFO] = v }
+    suspend fun setEpgEnabled(v: Boolean) = context.dataStore.edit { it[Keys.EPG_ENABLED] = v }
+    suspend fun setRemoteM3uUrl(url: String) = context.dataStore.edit { it[Keys.REMOTE_M3U_URL] = url }
+    suspend fun setAspectRatio(mode: AspectRatioMode) =
+        context.dataStore.edit { it[Keys.ASPECT_RATIO] = mode.name }
+}
+```     
+                    pendingLogo = attrs["tvg-logo"]
+                    pendingGroup = attrs["group-title"]
+                    pendingTvgId = attrs["tvg-id"]
+                    pendingLanguage = attrs["tvg-language"] ?: attrs["language"]
+                    // Display name is everything after the last comma on the #EXTINF line.
+                    pendingName = line.substringAfterLast(',').trim().ifEmpty { "Unnamed Channel" }
+                }
+                line.startsWith("#") -> {
+                    // Other tags (#EXTGRP, #EXTVLCOPT, etc.) are currently ignored.
+                }
+                else -> {
+                    // Any non-comment, non-empty line is treated as the stream URL
+                    // belonging to the preceding #EXTINF entry.
+                    val name = pendingName
+                    if (name != null) {
+                        results.add(
+                            ParsedM3uChannel(
+                                name = name,
+                                logoUrl = pendingLogo,
+                                groupTitle = pendingGroup,
+                                tvgId = pendingTvgId,
+                                language = pendingLanguage,
+                                streamUrl = line
+                            )
+                        )
+                    }
+                    pendingName = null
+                    pendingLogo = null
+                    pendingGroup = null
+                    pendingTvgId = null
+                    pendingLanguage = null
+                }
+            }
+        }
+
+        if (results.isEmpty()) {
+            throw M3uParseException("No channels found in playlist")
+        }
+        return results
+    }
+
+    fun toChannelEntities(parsed: List<ParsedM3uChannel>, source: String): List<ChannelEntity> =
+        parsed.mapIndexed { index, p ->
+            ChannelEntity(
+                channelNumber = index + 1,
+                name = p.name,
+                logoUrl = p.logoUrl,
+                streamUrl = p.streamUrl,
+                streamType = guessStreamType(p.streamUrl),
+                category = guessCategory(p.groupTitle),
+                language = p.language,
+                epgId = p.tvgId,
+                source = source
+            )
+        }
+
+    private fun guessStreamType(url: String): StreamType = when {
+        url.contains(".m3u8", ignoreCase = true) -> StreamType.HLS
+        url.contains(".mpd", ignoreCase = true) -> StreamType.DASH
+        url.contains(".ts", ignoreCase = true) -> StreamType.OTHER
+        else -> StreamType.PROGRESSIVE
+    }
+
+    private fun guessCategory(groupTitle: String?): ChannelCategory {
+        val g = groupTitle?.lowercase() ?: return ChannelCategory.OTHER
+        return when {
+            "news" in g -> ChannelCategory.NEWS
+            "movie" in g -> ChannelCategory.MOVIES
+            "music" in g -> ChannelCategory.MUSIC
+            "sport" in g -> ChannelCategory.SPORTS
+            "kid" in g || "cartoon" in g -> ChannelCategory.KIDS
+            "education" in g || "learn" in g -> ChannelCategory.EDUCATION
+            "region" in g || "local" in g -> ChannelCategory.REGIONAL
+            "devotion" in g || "religio" in g || "spiritual" in g -> ChannelCategory.DEVOTIONAL
+            "entertainment" in g -> ChannelCategory.ENTERTAINMENT
+            else -> ChannelCategory.OTHER
+        }
+    }
+}
+```
